@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "CS310-SRS-App/1.0.0": {
+        "runtime": {
+          "CS310-SRS-App.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CS310-SRS-App/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
