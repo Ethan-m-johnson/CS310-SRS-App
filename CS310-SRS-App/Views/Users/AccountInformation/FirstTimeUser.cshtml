@@ -1,0 +1,94 @@
+﻿@model CS310_SRS_App.Model.User
+@{
+    ViewData["Title"] = "First Time User Activation";
+}
+
+@if (ViewBag.IsValidUser == null || ViewBag.IsValidUser == false)
+{
+    <h1>Activate Your Account</h1>
+    <form asp-action="ValidateFirstTimeUser" method="post">
+        <div class="form-group">
+            <label for="email" class="control-label">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="tempPassword" class="control-label">Temporary Password:</label>
+            <input type="password" id="tempPassword" name="tempPassword" class="form-control" required />
+        </div>
+        <br/> 
+        <div class="form-group">
+            <input type="submit" value="Verify Information" class="btn btn-primary"/>
+        </div>
+    </form>
+}
+
+@if (ViewBag.IsValidUser == true)
+{
+    <h2>Enter Additional Information</h2>
+    <form asp-action="UpdateUserInfo" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label for="Email" class="control-label">Email</label>
+            <input type="email" id="Email" name="Email" value="@ViewBag.Email" class="form-control" disabled />
+            <input type="hidden" name="Email" value="@ViewBag.Email" />
+        </div>
+
+        <div class="form-group">
+            <label for="Password" class="control-label">Password</label>
+            <input type="password" id="Password" name="New Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="FirstName" class="control-label">First Name</label>
+            <input type="text" id="FirstName" name="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="MiddleName" class="control-label">Middle Name</label>
+            <input type="text" id="MiddleName" name="MiddleName" class="form-control" />
+            <span asp-validation-for="MiddleName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="LastName" class="control-label">Last Name</label>
+            <input type="text" id="LastName" name="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="Address" class="control-label">Address</label>
+            <input type="text" id="Address" name="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="DateOfBirth" class="control-label">Date of Birth</label>
+            <input type="date" id="DateOfBirth" name="DateOfBirth" class="form-control" />
+            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="Gender" class="control-label">Gender</label>
+            <select id="Gender" name="Gender" class="form-control">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="Phone" class="control-label">Phone</label>
+            <input type="text" id="Phone" name="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+        <br/>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+}
