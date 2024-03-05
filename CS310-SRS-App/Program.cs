@@ -1,4 +1,13 @@
+using CS310_SRS_App.Model;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddDbContext<CS310SRSDatabaseContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

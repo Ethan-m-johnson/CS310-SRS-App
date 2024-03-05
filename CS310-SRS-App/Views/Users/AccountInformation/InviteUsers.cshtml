@@ -1,0 +1,110 @@
+﻿@model CS310_SRS_App.Model.User
+
+@{
+    var userRole = ViewBag.UserRole as string; // Retrieve user role from ViewBag
+}
+
+
+<h6>Invite Different User Level Accounts:</h6>
+
+
+@*@if (userRole == "Admin")*@
+@*{*@
+    @* Role Selection Dropdown *@
+    <div class="form-group">
+        <label for="adminRoleSelect" class="control-label">Temp Select Role: (Current User Admin)</label>
+        <select id="adminRoleSelect" name="roleSelect" class="form-control">
+            <option value="">Select Role</option>
+            <option value="Admin">Admin</option>
+            <option value="Staff">Staff</option>
+        </select>
+    </div>
+    <br />
+    @* Admin - Admin form (initially hidden) *@
+    <div id="adminForm" style="display:none;">
+        <form asp-action="CreateAdmin" asp-controller="Users">
+            <div class="form-group">
+                <label for="adminEmail" class="control-label">Email:</label>
+                <input type="email" id="adminEmail" name="adminEmail" class="form-control" required />
+            </div>
+            <br />
+            <input type="submit" value="Invite Admin" class="btn btn-primary" />
+        </form>
+    </div>
+
+    @* Admin - Staff form (initially hidden) *@
+    <div id="staffForm" style="display:none;">
+        <form asp-action="CreateStaff" asp-controller="Users">
+            <div class="form-group">
+                <label for="staffEmail" class="control-label">Email:</label>
+                <input type="email" id="staffEmail" name="staffEmail" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="staffSalary" class="control-label">Salary:</label>
+                <input type="number" id="staffSalary" name="staffSalary" class="form-control" required />
+            </div>
+            <br />
+            <input type="submit" value="Invite Staff" class="btn btn-primary" />
+        </form>
+    </div>
+@*}*@
+
+@*else if (userRole == "Staff")*@
+@*{*@
+
+    <div class="form-group">
+        <br />
+        <label for="staffRoleSelect" class="control-label">Temp Select Role: (Current User Staff)</label>
+        <select id="staffRoleSelect" name="staffRole" class="form-control">
+            <option value="">Select Role</option>
+            <option value="Patient">Patient</option>
+        </select>
+    </div>
+
+    <div id="patientForm" style="display:none;">
+        <form asp-action="CreatePatient" asp-controller="Users">
+            <div class="form-group">
+                <label for="patientEmail" class="control-label">Email:</label>
+                <input type="email" id="patientEmail" name="patientEmail" class="form-control" required />
+            </div>
+            <br />
+            <input type="submit" value="Invite Patient" class="btn btn-primary" />
+        </form>
+    </div>
+@*}*@
+
+@*
+else
+{
+    <p>You do not have permission to view this content.</p>
+}
+*@
+
+@section Scripts {
+        <script>
+            $(document).ready(function() {
+                // Staff&Admin for Admin
+                $('#adminRoleSelect').change(function() {
+                    var selectedRole = $(this).val();
+                    $('#adminForm').hide();
+                    $('#staffForm').hide();
+
+                    if (selectedRole == 'Admin') {
+                        $('#adminForm').show();
+                    } else if (selectedRole == 'Staff') {
+                        $('#staffForm').show();
+                    }
+                });
+            
+                // Patient form for Staff
+                $('#staffRoleSelect').change(function () {
+                    var selectedRole = $(this).val();
+                    if (selectedRole == 'Patient') {
+                        $('#patientForm').show();
+                    } else {
+                        $('#patientForm').hide();
+                    }
+                });
+            });
+        </script>
+}
