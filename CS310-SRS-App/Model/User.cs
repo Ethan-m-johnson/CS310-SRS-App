@@ -25,7 +25,8 @@ namespace CS310_SRS_App.Model
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public string? Username { get; set; }
-        public byte[]? Password { get; set; }
+        public string? Password { get; set; }
+        public bool? IsVerified { get; set; }
 
         public virtual ICollection<Admin> Admins { get; set; }
         public virtual ICollection<Contact> ContactUser1s { get; set; }

@@ -4,12 +4,17 @@
     var userRole = ViewBag.UserRole as string; // Retrieve user role from ViewBag
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
 
-<h6>Invite Different User Level Accounts:</h6>
+@if(Context.Session.GetString("SessionKeyRole") == "Admin")
+{
+    <h6>Invite Admin/Staff User Level Accounts:</h6>
 
-
-@*@if (userRole == "Admin")*@
-@*{*@
     @* Role Selection Dropdown *@
     <div class="form-group">
         <label for="adminRoleSelect" class="control-label">Temp Select Role: (Current User Admin)</label>
@@ -47,11 +52,11 @@
             <input type="submit" value="Invite Staff" class="btn btn-primary" />
         </form>
     </div>
-@*}*@
+}
 
-@*else if (userRole == "Staff")*@
-@*{*@
-
+else if (Context.Session.GetString("SessionKeyRole") == "Staff")
+{
+    <h6>Invite Patient User Level Accounts:</h6>
     <div class="form-group">
         <br />
         <label for="staffRoleSelect" class="control-label">Temp Select Role: (Current User Staff)</label>
@@ -71,14 +76,14 @@
             <input type="submit" value="Invite Patient" class="btn btn-primary" />
         </form>
     </div>
-@*}*@
+}
 
-@*
+
 else
 {
     <p>You do not have permission to view this content.</p>
 }
-*@
+
 
 @section Scripts {
         <script>

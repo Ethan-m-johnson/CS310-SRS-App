@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\CS310-SRS-App.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\johns\\Documents\\GitHub\\CS310-SRS-App\\CS310-SRS-App\\wwwroot\\Assests\\LoginPicture.jpg",
+      "PackagePath": "staticwebassets\\Assests\\LoginPicture.jpg"
+    },
+    {
       "Id": "C:\\Users\\johns\\Documents\\GitHub\\CS310-SRS-App\\CS310-SRS-App\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
