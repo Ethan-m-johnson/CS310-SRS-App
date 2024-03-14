@@ -1,0 +1,24 @@
+﻿@model List<CS310_SRS_App.Model.CalenderBlock>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+<table class="table-bordered">
+    <tr>
+        <th>Start</th>
+        <th>End</th>
+    </tr>
+    @foreach(var entry in Model)
+    {
+        <tr>
+            <td>@entry.Start.ToString()</td>
+            <td>@entry.End.ToString()</td>
+        </tr>
+    }
+</table>
+
+
