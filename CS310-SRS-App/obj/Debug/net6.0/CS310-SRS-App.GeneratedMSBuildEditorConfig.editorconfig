@@ -56,12 +56,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQWNjb3VudEluZm9ybWF0aW9uXEZpcnN0VGltZVVzZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Users/AccountInformation/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQWNjb3VudEluZm9ybWF0aW9uXEZvcmdvdFBhc3N3b3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Users/AccountInformation/ForgotPasswordConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQWNjb3VudEluZm9ybWF0aW9uXEZvcmdvdFBhc3N3b3JkQ29uZmlybWF0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Users/AccountInformation/InviteUsers.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQWNjb3VudEluZm9ybWF0aW9uXEludml0ZVVzZXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Users/AccountInformation/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQWNjb3VudEluZm9ybWF0aW9uXExvZ2luLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Users/AccountInformation/ResetPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQWNjb3VudEluZm9ybWF0aW9uXFJlc2V0UGFzc3dvcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Users/AccountInformation/ResetPasswordConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQWNjb3VudEluZm9ybWF0aW9uXFJlc2V0UGFzc3dvcmRDb25maXJtYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Users/Create.cshtml]

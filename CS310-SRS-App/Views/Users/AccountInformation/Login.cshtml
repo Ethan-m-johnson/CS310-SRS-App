@@ -2,7 +2,12 @@
    ViewData["Title"] = "Login";
 }
 
-
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info" role="alert">
+        @TempData["Message"]
+    </div>
+}
 <div class="container-fluid">
     <div class="row no-gutter">
         <div class="col-md-6 d-none d-md-flex bg-image">
@@ -39,19 +44,19 @@
                 <div class="col-lg-10 col-xl-7 mx-auto">
                     <h3 class="display-4">Password Reset</h3>
                     <p class="text-muted mb-4">Enter Your Information Below.</p>
-                        <form onsubmit="event.preventDefault(); showEnterCode();">
-                            <div class="form-group mb-3">
-                                <input id="inputEmail" type="email" placeholder="Email address" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4">
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Request Reset Code</button>
-                        </form>
+                    <form asp-controller="Users" asp-action="ForgotPassword" method="post">
+                        <div class="form-group mb-3">
+                            <input name="Email" id="inputEmail" type="email" placeholder="Email address" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Request Reset Code</button>
+                    </form>
                     <div class="text-center d-flex justify-content-between mt-4">
                         <a href="#" onclick="showLoginForm()" class="text-primary" style="text-decoration: underline;">Return To Login</a>
                     </div>
                 </div>
             </div>
 
-
+            @*
             <div class="enterCode d-flex align-items-center py-5 hidden">
                 <div class="col-lg-10 col-xl-7 mx-auto">
                     <h3 class="display-4">Enter Code</h3>
@@ -85,7 +90,7 @@
 
                 </div>
             </div>
-
+            *@
     </div>
 </div>
 
@@ -110,7 +115,7 @@
 
 
 <script>
-
+    @*
         function showNewPassword() {
             document.querySelector('.login').classList.add('hidden');
             document.querySelector('.enterCode').classList.add('hidden');
@@ -123,14 +128,13 @@
         document.querySelector('.forgotPassword').classList.add('hidden');
         document.querySelector('.enterCode').classList.remove('hidden');
     }
+    *@
     function showForgotPassword() {
         document.querySelector('.login').classList.add('hidden');
         document.querySelector('.forgotPassword').classList.remove('hidden');
-        document.querySelector('.enterCode').classList.add('hidden');
     }
     function showLoginForm() {
         document.querySelector('.forgotPassword').classList.add('hidden');
-        document.querySelector('.enterCode').classList.add('hidden');
         document.querySelector('.login').classList.remove('hidden');
     }
 </script>
