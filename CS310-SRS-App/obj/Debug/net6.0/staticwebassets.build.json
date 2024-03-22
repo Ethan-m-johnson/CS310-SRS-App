@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Q71VKQHkCHUKJcPePsQmVWpkFOKr3v1GtuhZRIl0sAY=",
+  "Hash": "3CxFFVHq2r1mPxjYwfplSIuJrs34du6RNLXVikIg4SI=",
   "Source": "CS310-SRS-App",
   "BasePath": "_content/CS310-SRS-App",
   "Mode": "Default",
@@ -49,6 +49,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\johns\\Documents\\GitHub\\CS310-SRS-App\\CS310-SRS-App\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\CS310-SRS-App.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\johns\\Documents\\GitHub\\CS310-SRS-App\\CS310-SRS-App\\wwwroot\\Assests\\LoginPicture.jpg",
+      "SourceId": "CS310-SRS-App",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\johns\\Documents\\GitHub\\CS310-SRS-App\\CS310-SRS-App\\wwwroot\\",
+      "BasePath": "_content/CS310-SRS-App",
+      "RelativePath": "Assests/LoginPicture.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Assests\\LoginPicture.jpg"
     },
     {
       "Identity": "C:\\Users\\johns\\Documents\\GitHub\\CS310-SRS-App\\CS310-SRS-App\\wwwroot\\css\\site.css",
