@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CS310_SRS_App.Model;
+using CS310_SRS_App.Model.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
-using CS310_SRS_App.Model;
-using System.Net.Mail;
-using System.Net;
-using System.Net.Mime;
 
 
 namespace CS310_SRS_App.Controllers
@@ -24,6 +19,172 @@ namespace CS310_SRS_App.Controllers
             _context = context;
         }
 
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string? Email)
+        {
+            Console.WriteLine("----------------------------------------------------------------" + Email);
+            if (string.IsNullOrEmpty(Email))
+            {
+                // Email is null or empty; handle accordingly
+                return View("ForgotPassword"); // Ensure you have a view for handling errors or re-input
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
+            if (user != null)
+            {
+                // Generate a secure token
+                var token = GenerateToken();
+
+                // Check if an existing token exists for the user
+                var existingToken = await _context.ResetToken.FirstOrDefaultAsync(rt => rt.UserId == user.UserId);
+                if (existingToken != null)
+                {
+                    // Update the existing token and expiry date
+                    existingToken.Token = token;
+                    existingToken.ExpiryDate = DateTime.UtcNow.AddMinutes(15);
+                }
+                else
+                {
+                    // Create a new ResetToken object since one doesn't exist
+                    var resetToken = new ResetToken
+                    {
+                        Token = token,
+                        ExpiryDate = DateTime.UtcNow.AddMinutes(15),
+                        UserId = user.UserId
+                    };
+
+                    _context.ResetToken.Add(resetToken);
+                }
+
+                // Save changes to the database
+                await _context.SaveChangesAsync();
+
+                // Prepare and send the password reset email
+                var callbackUrl = Url.Action("ResetPassword", "Users", new { userId = user.UserId, token = token }, protocol: HttpContext.Request.Scheme);
+                Console.WriteLine(callbackUrl); // Consider replacing this with a call to send the email
+                SendPasswordResetEmail(Email, callbackUrl); // Ensure this method is async if it performs async operations
+
+                // Redirect to a confirmation page
+                return View("AccountInformation/ForgotPasswordConfirmation");
+            }
+
+            TempData["Message"] = "If an account with that email exists, a password reset link has been sent.";
+            return View("AccountInformation/Login");
+        }
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string userId)
+        {
+            var model = new ResetPasswordViewModel { Token = token, UserId = userId };
+            return View("AccountInformation/ResetPassword", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Convert UserId from string to int
+            if (!int.TryParse(model.UserId, out int userId))
+            {
+                // Handle the case where UserId is not a valid int
+                ModelState.AddModelError("", "Invalid user ID.");
+                return View(model);
+            }
+
+            // Use the converted int UserId to find the user
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null || !await VerifyToken(user, model.Token))
+            {
+                // Handle invalid user or token
+                ModelState.AddModelError("", "Invalid token or user does not exist.");
+                return View(model);
+            }
+
+            // Proceed with password reset
+            user.Password = HashPassword(model.NewPassword); // Ensure you hash the password securely
+            await _context.SaveChangesAsync();
+
+            // Redirect to a confirmation page or login page
+            return View("AccountInformation/ResetPasswordConfirmation");
+        }
+        private async Task<bool> VerifyToken(User user, string token)
+        {
+            // Retrieve the reset token entry from the database
+            var resetToken = await _context.ResetToken
+                .Where(rt => rt.Token == token && rt.UserId == user.UserId)
+                .SingleOrDefaultAsync();
+
+            // Check if the token exists and has not expired
+            if (resetToken != null && resetToken.ExpiryDate > DateTime.UtcNow)
+            {
+                // Optionally, you might want to invalidate the token after verification
+                // by removing it or setting a flag to prevent reuse
+                _context.ResetToken.Remove(resetToken);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+        public void SendPasswordResetEmail(string? Email, string callbackUrl)
+        {
+            try
+            {
+                var message = new MailMessage();
+                message.From = new MailAddress("cs310automatedemailnoreply@gmail.com");
+
+                if (!string.IsNullOrEmpty(Email))
+                {
+                    message.To.Add(Email);
+                }
+                else
+                {
+                    // Log or handle the case where there's no email
+                    Console.WriteLine("No email provided for password reset.");
+                    return;
+                }
+
+                message.Subject = "Password Reset Request";
+                message.Body = $"Hello,<br><br>" +
+                               "You have requested to reset your password. Please follow the link below to set a new password:<br><br>" +
+                               $"<a href='{callbackUrl}'>Reset Password</a><br><br>" +
+                               "If you did not request a password reset, please ignore this email or contact support.";
+
+                message.IsBodyHtml = true;
+
+                using (var client = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    client.EnableSsl = true; // Gmail requires SSL
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new NetworkCredential("cs310automatedemailnoreply@gmail.com", "rzzk ubqp pgda opju");
+                    client.Send(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the error more gracefully
+                Console.WriteLine($"Failed to send password reset email: {ex.Message}");
+            }
+        }
+        private string GenerateToken()
+        {
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenData = new byte[32]; // Generate a 256-bit token
+                rng.GetBytes(tokenData);
+                return Convert.ToBase64String(tokenData);
+            }
+        }
         //Get Views/AccountInformation/InviteUsers
         [HttpGet]
         public IActionResult Login()

@@ -32,6 +32,8 @@ namespace CS310_SRS_App.Model
         public virtual DbSet<User> Users{ get; set; } = null!;
         public virtual DbSet<staff> staff { get; set; } = null!;
 
+        public virtual DbSet<ResetToken> ResetToken { get; set; } = null!;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
