@@ -1,0 +1,60 @@
+﻿@model CS310_SRS_App.Model.AppointmentDisplay
+
+@{
+    ViewData["Title"] = "Cancel Appointment";
+}
+
+<h1>Cancel</h1>
+
+<h4>Are you sure you want to cancel the following appointment?</h4>
+<div title="Header">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Patient Name</th>
+
+                <th>Staff Name</th>
+
+                <th>@Html.DisplayNameFor(model => model.Location)</th>
+
+                <th>@Html.DisplayNameFor(model => model.dateTime)</th>
+
+                <th>@Html.DisplayNameFor(model => model.Topic)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>@Html.DisplayFor(model => model.PatientName)</th>
+
+                <th>@Html.DisplayFor(model => model.StaffName)</th>
+
+                <th>@Html.DisplayFor(model => model.Location)</th>
+
+                <th>@Html.DisplayFor(model => model.dateTime)</th>
+
+                <th>@Html.DisplayFor(model => model.Topic)</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<br />
+<div>
+    <form asp-action="DeleteAppointment">
+        <input type="hidden" asp-for="PatientId" />
+        <input type="hidden" asp-for="StaffId" />
+        <input type="hidden" asp-for="dateTime" />
+        <input type="hidden" asp-for="Location" />
+        <input type="hidden" asp-for="Topic" />
+        <input type="submit" value="Cancel" class="btn btn-danger" />
+    </form>
+</div>
+<br />
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to Appointments</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

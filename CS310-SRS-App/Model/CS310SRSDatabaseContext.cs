@@ -60,7 +60,7 @@ namespace CS310_SRS_App.Model
 
             modelBuilder.Entity<Appointment>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.PatientId, e.StaffId, e.DateTime});
 
                 entity.ToTable("Appointment");
 
@@ -232,7 +232,7 @@ namespace CS310_SRS_App.Model
                 entity.ToTable("Patient");
 
                 entity.Property(e => e.PatientId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("PatientID");
 
                 entity.Property(e => e.PrPhysicianId).HasColumnName("PrPhysicianID");
@@ -400,7 +400,7 @@ namespace CS310_SRS_App.Model
                 entity.ToTable("Staff");
 
                 entity.Property(e => e.StaffId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("StaffID");
 
                 entity.Property(e => e.Salary).HasColumnType("decimal(30, 15)");

@@ -1,0 +1,88 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<CS310_SRS_App.Model.AppointmentDisplay>
+@{
+    ViewData["Title"] = "Appointments";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@{
+    if (Context.Session.GetString("IsVerified").Equals("true"))
+    {
+        if (Model.ToList().Count > 0)
+        {
+            <div title="Header">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+
+                            <th>Staff Name</th>
+
+                            <th>@Html.DisplayNameFor(model => model.Location)</th>
+
+                            <th>@Html.DisplayNameFor(model => model.dateTime)</th>
+
+                            <th>@Html.DisplayNameFor(model => model.Topic)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <th>@Html.DisplayFor(modelitem => item.PatientName)</th>
+
+                                <th>@Html.DisplayFor(modelitem => item.StaffName)</th>
+
+                                <th>@Html.DisplayFor(modelitem => item.Location)</th>
+
+                                <th>@Html.DisplayFor(modelitem => item.dateTime)</th>
+
+                                <th>@Html.DisplayFor(modelitem => item.Topic)</th>
+                                @if (Context.Session.GetString("SessionKeyRole").Equals("Staff") || Context.Session.GetString("SessionKeyRole").Equals("Admin"))
+                                {
+                                    <th>
+                                        @Html.ActionLink("Edit","ToEdit", item, new{@class = "btn btn-primary"})
+                                    </th>
+                                }
+                                else
+                                {
+                                    <th>
+                                        @Html.ActionLink("Request Edit", "ToEditRequest", item, new { @class = "btn btn-primary" })
+                                    </th>
+                                }
+                                <th>
+                                    @Html.ActionLink("Cancel", "ToDelete", item, new { @class = "btn btn-danger" })
+                                </th>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p>There are no upcoming appointments</p>
+        }
+        if (Context.Session.GetString("SessionKeyRole").Equals("Staff") || Context.Session.GetString("SessionKeyRole").Equals("Admin"))
+        {
+            <a asp-action="ToCreate" class="btn btn-primary">Create Appointment</a>
+        }
+        else
+        {
+            <a asp-action="ToCreate" class="btn btn-primary">Request an Appointment</a>
+        }
+    }
+    else
+    {
+        <p>Please login to view this page!</p>
+    }
+}
+
