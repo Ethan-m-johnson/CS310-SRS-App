@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
-using CS310_SRS_App.Model;
 using IDocument = QuestPDF.Infrastructure.IDocument;
-
+using QuestPDF.Infrastructure;
+using QuestPDF.Fluent;
+using System.Diagnostics;
+using QuestPDF.Helpers;
 
 namespace CS310_SRS_App.Controllers
 {
@@ -25,8 +27,130 @@ namespace CS310_SRS_App.Controllers
                 return RedirectToAction(nameof(PatientHealthData));
             }
 
+            var patientDocToPass = await _context.PatientCharts
+                .SingleOrDefaultAsync(m => m.PatientChartID == id);
+
+            if (patientDocToPass == null)
+            {
+
+                ViewBag.ErrorMessage = "We couldn't find the requested patient chart. " +
+                    "This may be because the chart does not exist or the ID provided is incorrect. Please verify the information and try again.";
+
+                return RedirectToAction(nameof(PatientHealthData));
+            }
+
+            //---------------------------------------------------------------
+            //This section is for local pdf
+            var fileName = "HealthDataReport.pdf";
+            var report = new InvoiceDocument(patientDocToPass);
+            report.GeneratePdf(fileName);
+            var startInfo = new ProcessStartInfo("explorer.exe", fileName);
+            Process.Start(startInfo);
+            //----------------------------------------------------------------
+
+
+            //---------------------------------------------------------------
+            //This section is for live pdf
+            //var fileName = "HealthDataReport.pdf";
+            //var streamManager = HttpContext.RequestServices.GetRequiredService<RecyclableMemoryStreamManager>();
+            //using var memoryStream = streamManager.GetStream();
+            //var report = new InvoiceDocument(patientDocToPass);
+            //report.GeneratePdf(fileName);
+            //HttpContext.Response.ContentType = "application/pdf";
+            //HttpContext.Response.Headers.ContentDisposition = $"attachment; filename=\"{fileName}\"";
+            //memoryStream.Position = 0;
+            //await memoryStream.CopyToAsync(HttpContext.Response.Body);
+            //---------------------------------------------------------------
+
+
+
             return RedirectToAction(nameof(PatientHealthData));
         }
+        public class InvoiceDocument : IDocument
+        {
+            private PatientChart patientDocToPass;
+
+            public InvoiceDocument(PatientChart patientDocToPass)
+            {
+                this.patientDocToPass = patientDocToPass;
+            }
+
+            public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
+
+
+
+            public void Compose(IDocumentContainer container)
+            {
+                container
+                     .Page(page =>
+                     {
+                         page.Margin(50);
+
+                         page.Header().Element(ComposeHeader);
+                         page.Content().Element(ComposeContent);
+                         page.Footer().Height(10).Background(Colors.Grey.Lighten1);
+                     });
+            }
+
+            void ComposeHeader(QuestPDF.Infrastructure.IContainer container)
+            {
+                container.Row(row =>
+                {
+                    var titleStyle = TextStyle.Default.FontSize(10).SemiBold().Italic().FontColor(Colors.Black);
+                    //row.ConstantItem(50).Height(50).Image("wwwroot/Assets/dot.png"); //Add picture later
+
+
+                    row.RelativeItem().Column(column =>
+                    {
+                        column.Item().AlignCenter().Text(text =>
+                        {
+                            text.Span("SRS: Health Data Information Request").Style(titleStyle);
+                        });
+
+                        column.Item().AlignRight().Text(text =>
+                        {
+                            text.Span("Date Requested: " + DateTime.Now).Style(titleStyle);
+                        });
+
+                    });
+                });
+            }
+
+            void ComposeContent(IContainer container)
+            {
+                var tableStyle = TextStyle.Default.FontSize(10).FontColor(Colors.Black);
+                if (patientDocToPass == null)
+                {
+                    // Handle the case where patientDocToPass is null
+                    // For example, display a message indicating that the data is unavailable
+                    container.Text("Error: Patient chart data is unavailable.").Style(tableStyle);
+                    return;
+                }
+                container
+                        .Background(Colors.White)
+                        .AlignLeft()
+                        .AlignCenter()
+                        .Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                            });
+
+                            table.Cell().Row(1).ColumnSpan(3).Column(1).PaddingVertical(10).LineHorizontal(1).LineColor(Colors.Grey.Medium);
+                            table.Cell().Row(2).ColumnSpan(3).Column(1).Text($"Health Data, Date Recorded: {patientDocToPass.SubmissionDate?.ToString("MMMM d, yyyy") ?? "N/A"}").Style(tableStyle);
+                            table.Cell().Row(3).ColumnSpan(3).Column(1).Text($"Systolic Blood Pressure: {patientDocToPass.SBloodPressure?.ToString("F2") ?? "N/A"}").Style(tableStyle);
+                            table.Cell().Row(4).ColumnSpan(3).Column(1).Text($"Diastolic Blood Pressure: {patientDocToPass.DBloodPressure?.ToString("F2") ?? "N/A"}").Style(tableStyle);
+                            table.Cell().Row(5).ColumnSpan(3).Column(1).Text($"Heart Rate: {patientDocToPass.HeartRate?.ToString("F2") ?? "N/A"}").Style(tableStyle);
+                            table.Cell().Row(6).ColumnSpan(3).Column(1).Text($"Respiratory Rate: {patientDocToPass.RespRate?.ToString("F2") ?? "N/A"}").Style(tableStyle);
+                            table.Cell().Row(7).ColumnSpan(3).Column(1).Text($"Temperature (F): {patientDocToPass.Tempk?.ToString("F2") ?? "N/A"}").Style(tableStyle);
+                            table.Cell().Row(8).ColumnSpan(3).Column(1).PaddingVertical(10).LineHorizontal(1).LineColor(Colors.Grey.Medium);
+                        });
+            }
+         }
+
 
         [HttpGet]
         public IActionResult PatientHealthData()

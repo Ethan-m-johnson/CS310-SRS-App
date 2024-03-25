@@ -33,26 +33,23 @@
                         {
                             @*Put Patient NavBar Items here*@
                             <li class="nav-item">
-                                <a class="dropdown-item" asp-controller="HealthData" asp-action="PatientHealthData">Health Data</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="PatientHealthData">Health Data</a>
                             </li>
                         }
                         @if (Context.Session.GetString("SessionKeyRole") == "Staff")
                         {
                              @*Put Staff NavBar Items here*@
                              <li class="nav-item">
-                                <a class="dropdown-item" asp-controller="HealthData" asp-action="StaffHealthData">Health Data</a>
-                            </li>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Staff Health Data</a>
+                                </li>
                         }
                         @if (Context.Session.GetString("SessionKeyRole") == "Admin")
                         {
                             @*Put Admin NavBar Items here*@
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Staff Health Data</a>
+                                </li>
                         }
-                        <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="PatientHealthData">Health Data</a>
-                        </li>
-                        <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Staff Health Data</a>
-                        </li>
                     </ul>
 
                     <ul class="navbar-nav">
