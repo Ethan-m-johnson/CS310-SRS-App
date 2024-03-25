@@ -15,7 +15,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CS310_SRS_App</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SRS Health Portal</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -33,21 +33,29 @@
                         {
                             @*Put Patient NavBar Items here*@
                             <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="PatientHealthData">Health Data</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="PatientHealthData">Your Health Data</a>
                             </li>
                         }
                         @if (Context.Session.GetString("SessionKeyRole") == "Staff")
                         {
-                             @*Put Staff NavBar Items here*@
-                             <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Staff Health Data</a>
+                                @*Put Staff NavBar Items here*@
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Enter Health Data</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="InviteUsers">Patient Invitation</a>
                                 </li>
                         }
                         @if (Context.Session.GetString("SessionKeyRole") == "Admin")
                         {
                             @*Put Admin NavBar Items here*@
-                                <li class="nav-item">
+                                @*<li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Staff Health Data</a>
+                                </li>*@
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="InviteUsers">Admin/Staff Invitation</a>
                                 </li>
                         }
                     </ul>
