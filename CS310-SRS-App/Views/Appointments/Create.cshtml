@@ -1,0 +1,53 @@
+﻿@model CS310_SRS_App.Model.Appointment
+
+@{
+    ViewData["Title"] = "Create Appointment";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+<h1>Create</h1>
+
+<h4>Appointment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateAppointment">
+            <div class="text-danger"></div>
+            <div class="form-group">
+                <label for="patientEmail" class="control-label">Patient's Email:</label>
+                <input type="email" id="patientEmail" name="patientEmail" class="form-control" required/>
+            </div>
+            <div class="form-group">
+                <label for="time" class="control-label">Date and Time:</label>
+                <input type="datetime" id="time" name="time" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="location" class="control-label">Location (Room Number):</label>
+                <input type="text" id="location" name="location" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="topic" class="control-label">Topic of Appointment:</label>
+                <input type="text" id="topic" name="topic" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to Appointments</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
