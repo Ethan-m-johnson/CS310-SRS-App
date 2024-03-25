@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 </head>
 <body>
+    <div class="site-wrapper d-flex flex-column min-vh-100">
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -26,8 +28,32 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                    
+                        @if (Context.Session.GetString("SessionKeyRole") == "Patient")
+                        {
+                            @*Put Patient NavBar Items here*@
+                            <li class="nav-item">
+                                <a class="dropdown-item" asp-controller="HealthData" asp-action="PatientHealthData">Health Data</a>
+                            </li>
+                        }
+                        @if (Context.Session.GetString("SessionKeyRole") == "Staff")
+                        {
+                             @*Put Staff NavBar Items here*@
+                             <li class="nav-item">
+                                <a class="dropdown-item" asp-controller="HealthData" asp-action="StaffHealthData">Health Data</a>
+                            </li>
+                        }
+                        @if (Context.Session.GetString("SessionKeyRole") == "Admin")
+                        {
+                            @*Put Admin NavBar Items here*@
+                        }
+                        <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="PatientHealthData">Health Data</a>
+                        </li>
+                        <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Staff Health Data</a>
+                        </li>
                     </ul>
-
 
                     <ul class="navbar-nav">
                         @if (Context.Session.GetString("IsVerified") == "true")
@@ -37,10 +63,7 @@
                                     <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i> <!-- Use the Bootstrap person icon -->
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" asp-controller="Users" asp-action="AccountInformation">Account Information</a>
-                                    <a class="dropdown-item" asp-controller="Users" asp-action="HealthData">Health Data</a>
-                                    <a class="dropdown-item" asp-controller="Users" asp-action="HealthData">Add More Later</a>
-
+                                    <a class="dropdown-item" asp-controller="Users" asp-action="Details" asp-route-id="@Context.Session.GetString("SessionKeyID")">Account Information</a>
                                     <div class="dropdown-divider"></div>
                                     <form asp-controller="Users" asp-action="Logout" method="post" class="px-3">
                                         <button type="submit" class="btn btn-danger">Logout</button>
@@ -70,9 +93,41 @@
             &copy; 2024 - CS310_SRS_App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
+<style>
+    .site-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+        .site-wrapper > .container {
+            flex-grow: 1; /* Make the container grow to fill available space */
+            display: flex;
+            flex-direction: column;
+        }
+
+            .site-wrapper > .container > main {
+                flex-grow: 1; /* Make main content grow to push the footer down */
+            }
+
+        .site-wrapper .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 0;
+            height: 70px;
+            font-size: 14px;
+            background-color: #ffffff; /* Ensure the footer has a background */
+            z-index: 1000; /* Ensure the footer stays above other content */
+        }
+</style>

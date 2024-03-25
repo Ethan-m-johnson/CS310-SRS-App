@@ -36,6 +36,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29udGFjdHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/HealthData/PatientHealthData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVhbHRoRGF0YVxQYXRpZW50SGVhbHRoRGF0YS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/HealthData/StaffHealthData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVhbHRoRGF0YVxTdGFmZkhlYWx0aERhdGEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/johns/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

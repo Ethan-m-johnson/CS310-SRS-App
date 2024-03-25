@@ -19,7 +19,6 @@ namespace CS310_SRS_App.Controllers
             _context = context;
         }
 
-
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
@@ -67,8 +66,8 @@ namespace CS310_SRS_App.Controllers
 
                 // Prepare and send the password reset email
                 var callbackUrl = Url.Action("ResetPassword", "Users", new { userId = user.UserId, token = token }, protocol: HttpContext.Request.Scheme);
-                Console.WriteLine(callbackUrl); // Consider replacing this with a call to send the email
-                SendPasswordResetEmail(Email, callbackUrl); // Ensure this method is async if it performs async operations
+                Console.WriteLine(callbackUrl); // 
+                SendPasswordResetEmail(Email, callbackUrl); 
 
                 // Redirect to a confirmation page
                 return View("AccountInformation/ForgotPasswordConfirmation");
@@ -203,7 +202,7 @@ namespace CS310_SRS_App.Controllers
             {
                 // Handle missing email or password
                 ViewBag.ErrorMessage = "Email and Password are required.";
-                return RedirectToAction("Index", "Home");
+                return View("AccountInformation/Login");
             }
 
             var hashedPassword = HashPassword(password);
@@ -243,8 +242,8 @@ namespace CS310_SRS_App.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            ViewBag.ErrorMessage = "Invalid login attempt.";
-            return RedirectToAction("Index", "Home");
+            ViewBag.ErrorMessage = "Invalid Email and/or Password.";
+            return View("AccountInformation/Login");
         }
 
         private async Task<string> DetermineUserRole(int userId)
@@ -284,8 +283,8 @@ namespace CS310_SRS_App.Controllers
             bool emailExists = await _context.Users.AnyAsync(u => u.Email == adminEmail);
             if (emailExists)
             {
-                //return RedirectToAction("Index");//Do this for now
-                // Handle where there is already an account with that email
+                TempData["Error"] = "An account with this email already exists.";
+                return RedirectToAction("InviteUsers");
             }
 
 

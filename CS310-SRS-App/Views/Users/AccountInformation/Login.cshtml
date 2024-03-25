@@ -8,6 +8,12 @@
         @TempData["Message"]
     </div>
 }
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
 <div class="container-fluid">
     <div class="row no-gutter">
         <div class="col-md-6 d-none d-md-flex bg-image">
@@ -101,7 +107,7 @@
 
     .login, .forgotPassword, .enterCode, .newPassword,
     .image {
-        min-height: 80vh;
+        min-height: 90vh;
     }
 
     .bg-image {
