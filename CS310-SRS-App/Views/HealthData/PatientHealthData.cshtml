@@ -1,0 +1,57 @@
+﻿@model IEnumerable<CS310_SRS_App.Model.PatientChart>
+
+@if (Context.Session.GetString("SessionKeyRole") == "Patient")
+{
+  
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.ErrorMessage
+        </div>
+    }
+
+    @if (Model != null && Model.Any())
+    {
+        <h2>My Health Information</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date Recorded </th>
+                    <th>Systolic Blood Pressure</th>
+                    <th>Diastolic Blood Pressure</th>
+                    <th>Heart Rate</th>
+                    <th>Respiratory Rate</th>
+                    <th>Temperature (F)</th> <!-- Assuming Tempk is in Fahrenheit. If not, adjust the label accordingly -->
+                    <th>PDF Section</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var data in Model)
+                {
+                    <tr>
+                        <td>@(data.SubmissionDate.HasValue ? data.SubmissionDate.Value.ToString("MM/dd/yyyy") : "N/A")</td>
+                        <td>@(data.SBloodPressure.HasValue ? data.SBloodPressure.Value.ToString("F0") : "N/A")</td>
+                        <td>@(data.DBloodPressure.HasValue ? data.DBloodPressure.Value.ToString("F0") : "N/A")</td>
+                        <td>@(data.HeartRate.HasValue ? data.HeartRate.Value.ToString("F0") : "N/A")</td>
+                        <td>@(data.RespRate.HasValue ? data.RespRate.Value.ToString("F0") : "N/A")</td>
+                        <td>@(data.Tempk.HasValue ? data.Tempk.Value.ToString("F1") : "N/A")</td>
+
+
+                        <td>
+                            <a asp-action="PrintDetails" asp-route-id="@data.PatientChartID">Export To PDF</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No health information available.</p>
+    }
+}
+else
+{
+    <p>You do not have permission to view this content.</p>
+}

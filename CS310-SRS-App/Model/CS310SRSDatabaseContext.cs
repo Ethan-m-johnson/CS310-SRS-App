@@ -32,6 +32,8 @@ namespace CS310_SRS_App.Model
         public virtual DbSet<User> Users{ get; set; } = null!;
         public virtual DbSet<staff> staff { get; set; } = null!;
 
+        public virtual DbSet<ResetToken> ResetToken { get; set; } = null!;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -254,7 +256,7 @@ namespace CS310_SRS_App.Model
 
             modelBuilder.Entity<PatientChart>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.PatientChartID); // Define primary key
 
                 entity.ToTable("PatientChart");
 
@@ -279,8 +281,9 @@ namespace CS310_SRS_App.Model
                     .HasForeignKey(d => d.PatientId)
                     .HasConstraintName("FK_PatientChart_Patient");
             });
+        
 
-            modelBuilder.Entity<PatientDocument>(entity =>
+        modelBuilder.Entity<PatientDocument>(entity =>
             {
                 entity.HasKey(e => e.PatientId);
 

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CS310_SRS_App.Model;
+using CS310_SRS_App.Model.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
-using CS310_SRS_App.Model;
-using System.Net.Mail;
-using System.Net;
-using System.Net.Mime;
 
 
 namespace CS310_SRS_App.Controllers
@@ -24,8 +19,173 @@ namespace CS310_SRS_App.Controllers
             _context = context;
         }
 
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string? Email)
+        {
+            Console.WriteLine("----------------------------------------------------------------" + Email);
+            if (string.IsNullOrEmpty(Email))
+            {
+                // Email is null or empty; handle accordingly
+                return View("ForgotPassword"); // Ensure you have a view for handling errors or re-input
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
+            if (user != null)
+            {
+                // Generate a secure token
+                var token = GenerateToken();
+
+                // Check if an existing token exists for the user
+                var existingToken = await _context.ResetToken.FirstOrDefaultAsync(rt => rt.UserId == user.UserId);
+                if (existingToken != null)
+                {
+                    // Update the existing token and expiry date
+                    existingToken.Token = token;
+                    existingToken.ExpiryDate = DateTime.UtcNow.AddMinutes(15);
+                }
+                else
+                {
+                    // Create a new ResetToken object since one doesn't exist
+                    var resetToken = new ResetToken
+                    {
+                        Token = token,
+                        ExpiryDate = DateTime.UtcNow.AddMinutes(15),
+                        UserId = user.UserId
+                    };
+
+                    _context.ResetToken.Add(resetToken);
+                }
+
+                // Save changes to the database
+                await _context.SaveChangesAsync();
+
+                // Prepare and send the password reset email
+                var callbackUrl = Url.Action("ResetPassword", "Users", new { userId = user.UserId, token = token }, protocol: HttpContext.Request.Scheme);
+                Console.WriteLine(callbackUrl); // 
+                SendPasswordResetEmail(Email, callbackUrl); 
+
+                // Redirect to a confirmation page
+                return View("AccountInformation/ForgotPasswordConfirmation");
+            }
+
+            TempData["Message"] = "If an account with that email exists, a password reset link has been sent.";
+            return View("AccountInformation/Login");
+        }
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string userId)
+        {
+            var model = new ResetPasswordViewModel { Token = token, UserId = userId };
+            return View("AccountInformation/ResetPassword", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Convert UserId from string to int
+            if (!int.TryParse(model.UserId, out int userId))
+            {
+                // Handle the case where UserId is not a valid int
+                ModelState.AddModelError("", "Invalid user ID.");
+                return View(model);
+            }
+
+            // Use the converted int UserId to find the user
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null || !await VerifyToken(user, model.Token))
+            {
+                // Handle invalid user or token
+                ModelState.AddModelError("", "Invalid token or user does not exist.");
+                return View(model);
+            }
+
+            // Proceed with password reset
+            user.Password = HashPassword(model.NewPassword); // Ensure you hash the password securely
+            await _context.SaveChangesAsync();
+
+            // Redirect to a confirmation page or login page
+            return View("AccountInformation/ResetPasswordConfirmation");
+        }
+        private async Task<bool> VerifyToken(User user, string token)
+        {
+            // Retrieve the reset token entry from the database
+            var resetToken = await _context.ResetToken
+                .Where(rt => rt.Token == token && rt.UserId == user.UserId)
+                .SingleOrDefaultAsync();
+
+            // Check if the token exists and has not expired
+            if (resetToken != null && resetToken.ExpiryDate > DateTime.UtcNow)
+            {
+                // Optionally, you might want to invalidate the token after verification
+                // by removing it or setting a flag to prevent reuse
+                _context.ResetToken.Remove(resetToken);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+        public void SendPasswordResetEmail(string? Email, string callbackUrl)
+        {
+            try
+            {
+                var message = new MailMessage();
+                message.From = new MailAddress("cs310automatedemailnoreply@gmail.com");
+
+                if (!string.IsNullOrEmpty(Email))
+                {
+                    message.To.Add(Email);
+                }
+                else
+                {
+                    // Log or handle the case where there's no email
+                    Console.WriteLine("No email provided for password reset.");
+                    return;
+                }
+
+                message.Subject = "Password Reset Request";
+                message.Body = $"Hello,<br><br>" +
+                               "You have requested to reset your password. Please follow the link below to set a new password:<br><br>" +
+                               $"<a href='{callbackUrl}'>Reset Password</a><br><br>" +
+                               "If you did not request a password reset, please ignore this email or contact support.";
+
+                message.IsBodyHtml = true;
+
+                using (var client = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    client.EnableSsl = true; // Gmail requires SSL
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new NetworkCredential("cs310automatedemailnoreply@gmail.com", "rzzk ubqp pgda opju");
+                    client.Send(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the error more gracefully
+                Console.WriteLine($"Failed to send password reset email: {ex.Message}");
+            }
+        }
+        private string GenerateToken()
+        {
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenData = new byte[32]; // Generate a 256-bit token
+                rng.GetBytes(tokenData);
+                return Convert.ToBase64String(tokenData);
+            }
+        }
         //Get Views/AccountInformation/InviteUsers
-        [HttpGet("users/accountinformation/Login")]
+        [HttpGet]
         public IActionResult Login()
         {
             //var userRole = HttpContext.Session.GetString("SessionRole"); // Get user role from session
@@ -33,6 +193,73 @@ namespace CS310_SRS_App.Controllers
             return View("AccountInformation/Login");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Login(string? email, string? password)
+        {
+            Console.WriteLine("email: " + email);
+            Console.WriteLine("password: " +  password);
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                // Handle missing email or password
+                ViewBag.ErrorMessage = "Email and Password are required.";
+                return View("AccountInformation/Login");
+            }
+
+            var hashedPassword = HashPassword(password);
+            
+
+
+            var user = await _context.Users
+                          .Where(u => u.Email.ToLower() == email.ToLower())
+                          .FirstOrDefaultAsync();
+            
+            if (user != null && hashedPassword == user.Password)
+            {
+                HttpContext.Session.SetString("IsVerified", "true"); //Session variable
+                HttpContext.Session.SetString("SessionKeyEmail", email);
+                HttpContext.Session.SetString("SessionKeyID", user.UserId.ToString());
+
+
+                // Determine the role of the user
+                var role = await DetermineUserRole(user.UserId);
+                HttpContext.Session.SetString("SessionKeyRole", role);
+
+                Console.WriteLine($"IsVerified: {HttpContext.Session.GetString("IsVerified")}");
+                Console.WriteLine($"SessionKeyEmail: {HttpContext.Session.GetString("SessionKeyEmail")}");
+                Console.WriteLine($"SessionKeyID: {HttpContext.Session.GetString("SessionKeyID")}");
+                var userRole = HttpContext.Session.GetString("SessionKeyRole");
+                if (userRole == "Unknown")
+                {
+                    HttpContext.Session.Clear();
+                    // Redirect to the login page or an error page
+                    return RedirectToAction("Index", "Home");
+                }
+
+                Console.WriteLine($"IsVerified: {HttpContext.Session.GetString("IsVerified")}");
+                Console.WriteLine($"SessionKeyEmail: {HttpContext.Session.GetString("SessionKeyEmail")}");
+                Console.WriteLine($"SessionKeyID: {HttpContext.Session.GetString("SessionKeyID")}");
+
+
+                return RedirectToAction("Index", "Home");
+            }
+            ViewBag.ErrorMessage = "Invalid Email and/or Password.";
+            return View("AccountInformation/Login");
+        }
+
+        private async Task<string> DetermineUserRole(int userId)
+        {
+            // Check each table to see where the UserId exists as a foreign key
+            var isAdmin = await _context.Admins.AnyAsync(a => a.UserId == userId);
+            if (isAdmin) return "Admin";
+
+            var isStaff = await _context.staff.AnyAsync(s => s.UserId == userId);
+            if (isStaff) return "Staff";
+
+            var isPatient = await _context.Patients.AnyAsync(p => p.UserId == userId);
+            if (isPatient) return "Patient";
+
+            return "Unknown"; 
+        }
 
 
         //Get Views/AccountInformation/InviteUsers
@@ -56,8 +283,8 @@ namespace CS310_SRS_App.Controllers
             bool emailExists = await _context.Users.AnyAsync(u => u.Email == adminEmail);
             if (emailExists)
             {
-                //return RedirectToAction("Index");//Do this for now
-                // Handle where there is already an account with that email
+                TempData["Error"] = "An account with this email already exists.";
+                return RedirectToAction("InviteUsers");
             }
 
 
@@ -66,7 +293,8 @@ namespace CS310_SRS_App.Controllers
             User newUser = new User
             {
                 Email = adminEmail,
-                Password = Encoding.UTF8.GetBytes(hashedPassword), //Convert hashed password to bytes to store in DB
+                Password = hashedPassword, //Convert hashed password to bytes to store in DB
+                IsVerified = false,
                 //accountActivated = false // Add this to the DB
             };
 
@@ -93,24 +321,25 @@ namespace CS310_SRS_App.Controllers
         {
             if (string.IsNullOrWhiteSpace(staffEmail) || staffSalary <= 0)
             {
-                return RedirectToAction("Index");//Do this for now
-                // Handle the case where adminEmail is null or empty
+                TempData["Error"] = "Email and/or Salary can't be blank.";
+                return RedirectToAction("InviteUsers");
             }
 
             bool emailExists = await _context.Users.AnyAsync(u => u.Email == staffEmail);
             if (emailExists)
             {
-                return RedirectToAction("Index");//Do this for now
-                // Handle where there is already an account with that email
+                TempData["Error"] = "An account with this email already exists.";
+                return RedirectToAction("InviteUsers");
             }
 
 
             string tempPassword = GeneratePassword();
-            string hashedPassword = HashPassword(tempPassword);
+            string hashedPassword = HashPassword(tempPassword); //Convert hashed password to store in DB
             User newUser = new User
             {
                 Email = staffEmail,
-                Password = Encoding.UTF8.GetBytes(hashedPassword), //Convert hashed password to bytes to store in DB
+                Password = hashedPassword, 
+                IsVerified = false,
                 //accountActivated = false // Add this to the DB
             };
 
@@ -153,7 +382,8 @@ namespace CS310_SRS_App.Controllers
             User newUser = new User
             {
                 Email = patientEmail,
-                Password = Encoding.UTF8.GetBytes(hashedPassword),
+                Password = hashedPassword,
+                IsVerified = false,
                 //accountActivated = false // Add this to the DB
             };
 
@@ -215,12 +445,13 @@ namespace CS310_SRS_App.Controllers
 
             string HashedPass = HashPassword(tempPassword);
 
-            var user = await _context.Users.Where(s => s.Email == email && s.Password == Encoding.UTF8.GetBytes(HashedPass)).FirstOrDefaultAsync();
+            var user = await _context.Users.Where(s => s.Email == email && s.Password == HashedPass).FirstOrDefaultAsync();
             
             if (user != null)
             {
                 ViewBag.IsValidUser = true;
                 ViewBag.Email = email;
+                ViewBag.UserId = user.UserId;
             }
             else
             {
@@ -277,6 +508,59 @@ namespace CS310_SRS_App.Controllers
                 return View(); // This exception should be caught if the email address inputted does not follow email guidelines
             }
         }
+
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddAccountInformation(int UserId, string Password, string FirstName, string MiddleName, string LastName, string Address, DateTime DateOfBirth, string Gender, string Phone)
+        {
+            if (ModelState.IsValid)
+            {
+                // Find the user by UserId
+                var user = await _context.Users.FindAsync(UserId);
+                if (user == null)
+                {
+                    // Handle the case where the user doesn't exist
+                    return NotFound();
+                }
+                var hashedPassword = HashPassword(Password);
+                // Update user's information
+                user.Password = hashedPassword;
+                user.FirstName = FirstName;
+                user.MiddleName = MiddleName;
+                user.LastName = LastName;
+                user.Address = Address;
+                user.DateOfBirth = DateOfBirth;
+                user.Gender = Gender;
+                user.Phone = Phone;
+                user.IsVerified = true;
+
+                // Since the Email field is disabled in the form, it won't be posted back.
+                // Assuming Email doesn't change or is handled elsewhere.
+                try
+                {
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                    // Redirect to a confirmation page, or wherever appropriate
+                    return RedirectToAction("Index", "Home"); // Adjust redirection as needed
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    // Log the exception (ex) as needed
+                    return StatusCode(500, "Internal server error");
+                }
+            }
+
+            // If we got this far, something failed, redisplay form with existing data
+            ViewBag.IsValidUser = true; // Ensure form remains visible
+            ViewBag.UserId = UserId;
+            return View("AccountInformation/FirstTimeUser"); // Adjust view name as needed
+        }
+
+
+
 
 
 

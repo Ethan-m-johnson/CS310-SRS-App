@@ -1,116 +1,146 @@
-﻿@*
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*
-@{
+﻿@{
+   ViewData["Title"] = "Login";
 }
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
 
-<div class="sidenav">
-    <div class="login-main-text">
-        <h2>Application<br> Login Page</h2>
-        <p>Login or register from here to access.</p>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info" role="alert">
+        @TempData["Message"]
     </div>
-</div>
-<div class="main">
-    <div class="col-md-6 col-sm-12">
-        <div class="login-form">
-            <form>
-                <div class="form-group">
-                    <label>User Name</label>
-                    <input type="text" class="form-control" placeholder="User Name">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-black">Login</button>
-                <br />
-
-            </form>
+}
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.ErrorMessage
+    </div>
+}
+<div class="container-fluid">
+    <div class="row no-gutter">
+        <div class="col-md-6 d-none d-md-flex bg-image">
+            @*Image Half*@
         </div>
+
+
+
+        <div class="col-md-6 bg-light">
+            
+            <div class="login d-flex align-items-center py-5">
+                <div class="col-lg-10 col-xl-7 mx-auto">
+                    <h3 class="display-4">Login</h3>
+                    <p class="text-muted mb-4">Enter Your Information Below.</p>
+                    <form asp-controller="Users" asp-action="Login" method="post">
+                        <div class="form-group mb-3">
+                            <input name="email" id="inputEmail" type="email" placeholder="Email address" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4">
+                        </div>
+                        <div class="form-group mb-3">
+                            <input name="password"id="inputPassword" type="password" placeholder="Password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Sign in</button>
+                    </form>
+                    <div class="text-center d-flex justify-content-between mt-4">
+                        <a href="#" onclick="showForgotPassword()" class="text-primary" style="text-decoration: underline;">Forgot Password?</a> |
+                        @*<a class="text-primary" style="text-decoration: underline;" asp-controller="Users" asp-action="ForgotPassword">Forgot Password?</a> |*@
+                        <a class="text-primary" style="text-decoration: underline;" asp-controller="Users" asp-action="FirstTimeUser">First-Time User</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="forgotPassword d-flex align-items-center py-5 hidden"> @*Initially hidden until forgot password is clicked*@
+                <div class="col-lg-10 col-xl-7 mx-auto">
+                    <h3 class="display-4">Password Reset</h3>
+                    <p class="text-muted mb-4">Enter Your Information Below.</p>
+                    <form asp-controller="Users" asp-action="ForgotPassword" method="post">
+                        <div class="form-group mb-3">
+                            <input name="Email" id="inputEmail" type="email" placeholder="Email address" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Request Reset Code</button>
+                    </form>
+                    <div class="text-center d-flex justify-content-between mt-4">
+                        <a href="#" onclick="showLoginForm()" class="text-primary" style="text-decoration: underline;">Return To Login</a>
+                    </div>
+                </div>
+            </div>
+
+            @*
+            <div class="enterCode d-flex align-items-center py-5 hidden">
+                <div class="col-lg-10 col-xl-7 mx-auto">
+                    <h3 class="display-4">Enter Code</h3>
+                    <p class="text-muted mb-4">Please enter the reset code sent to your email.</p>
+                    <form onsubmit="event.preventDefault(); showNewPassword();">
+                        <div class="form-group mb-3">
+                            <input id="resetCode" type="text" placeholder="Reset Code" required="" class="form-control rounded-pill border-0 shadow-sm px-4">
+                        </div>
+                        <button type="button" onclick="showNewPassword()" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Submit Code</button>
+                    </form>
+                    <div class="text-center d-flex justify-content-between mt-4">
+                        <a href="#" onclick="showLoginForm()" class="text-primary" style="text-decoration: underline;">Return To Login</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="newPassword d-flex align-items-center py-5 hidden">
+                <div class="col-lg-10 col-xl-7 mx-auto">
+                    <h3 class="display-4">Create Password</h3>
+                    <p class="text-muted mb-4">Enter a new password below.</p>
+                    <form>
+                        <div class="form-group mb-3">
+                            <input id="inputPass" type="text" placeholder="Password" required="" autofocus="" class="form-control rounded-pill border-0 shadow-sm px-4">
+                        </div>
+                        <div class="form-group mb-3">
+                            <input id="inputPassConfirm" type="text" placeholder="Confirm Password" required="" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Set New Password</button>
+                    </form>
+
+                </div>
+            </div>
+            *@
     </div>
 </div>
 
 <style>
-        .body {
-        font-family: "Lato", sans-serif;
-    }
-
-
-
-    .main-head{
-        height: 150px;
-        background: #FFF;
-
-    }
-
-    .sidenav {
-        height: 100%;
-        background-color: #000;
-        overflow-x: hidden;
-        padding-top: 20px;
-    }
-
-
-    .main {
-        padding: 0px 10px;
-    }
-
-    @@media screen and (max-height: 450px) {
-        .sidenav {padding-top: 15px;}
-    }
-
-    @@media screen and (max-width: 450px) {
-        .login-form{
-            margin-top: 10%;
+        .hidden {
+            display: none !important;
         }
 
-        .register-form{
-            margin-top: 10%;
-        }
+    .login, .forgotPassword, .enterCode, .newPassword,
+    .image {
+        min-height: 90vh;
     }
 
-    @@media screen and (min-width: 768px){
-    .main{
-        margin-left: 40%;
+    .bg-image {
+            background-image: url('https://media.istockphoto.com/id/1345172339/photo/concept-of-testing-treatment-and-health-care-delivery.jpg?s=612x612&w=0&k=20&c=b9jQBrDC2rfspwYhO_8PcJXGM41d5a6pAw7ynx8B93w=');
+        background-size: cover;
+        background-position: center center;
     }
-
-    .sidenav{
-        width: 40%;
-        position: fixed;
-        z-index: 1;
-        top: 0;
-        left: 0;
-    }
-
-    .login-form{
-        margin-top: 80%;
-    }
-
-    .register-form{
-        margin-top: 20%;
-    }
-}
-
-
-.login-main-text{
-    margin-top: 20%;
-    padding: 60px;
-    color: #fff;
-}
-
-.login-main-text h2{
-    font-weight: 300;
-}
-
-.btn-black{
-    background-color: #000 !important;
-    color: #fff;
-}
-}
 </style>
-*@
+
+
+
+
+<script>
+    @*
+        function showNewPassword() {
+            document.querySelector('.login').classList.add('hidden');
+            document.querySelector('.enterCode').classList.add('hidden');
+            document.querySelector('.newPassword').classList.remove('hidden'); // Ensure newPassword is also hidden when showing forgotPassword
+            document.querySelector('.forgotPassword').classList.add('hidden');
+        }
+
+    function showEnterCode() {
+        document.querySelector('.login').classList.add('hidden');
+        document.querySelector('.forgotPassword').classList.add('hidden');
+        document.querySelector('.enterCode').classList.remove('hidden');
+    }
+    *@
+    function showForgotPassword() {
+        document.querySelector('.login').classList.add('hidden');
+        document.querySelector('.forgotPassword').classList.remove('hidden');
+    }
+    function showLoginForm() {
+        document.querySelector('.forgotPassword').classList.add('hidden');
+        document.querySelector('.login').classList.remove('hidden');
+    }
+</script>

@@ -1,0 +1,149 @@
+﻿@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+@if (Context.Session.GetString("SessionKeyRole") == "Admin" || (Context.Session.GetString("SessionKeyRole") == "Staff"))
+{
+    <h3>Search For Patient and Enter Health Information: </h3>
+    <div class="search-container position-relative">
+        <input type="text" id="patientSearch" class="form-control" placeholder="Search patients..." autocomplete="off">
+        <ul id="searchResults" class="list-group position-absolute w-100" style="display:none;"></ul>
+    </div>
+    <br />
+    <form id="patientDetails" asp-action="SavePatientChart" method="post" style="display:none;">
+        <h3>Patient Chart Details</h3>
+        <input type="hidden" id="selectedPatientName" name="selectedPatientName" value="">
+        <div class="form-group">
+            <label for="sBloodPressure">Systolic Blood Pressure:</label>
+            <input type="number" step="0.01" class="form-control" id="sBloodPressure" name="sBloodPressure" required>
+        </div>
+        <div class="form-group">
+            <label for="dBloodPressure">Diastolic Blood Pressure:</label>
+            <input type="number" step="0.01" class="form-control" id="dBloodPressure" name="dBloodPressure" required>
+        </div>
+        <div class="form-group">
+            <label for="heartRate">Heart Rate:</label>
+            <input type="number" step="0.01" class="form-control" id="heartRate" name="heartRate" required>
+        </div>
+        <div class="form-group">
+            <label for="respRate">Respiratory Rate:</label>
+            <input type="number" step="0.01" class="form-control" id="respRate" name="respRate" required>
+        </div>
+        <div class="form-group">
+            <label for="tempk">Temperature (F):</label>
+            <input type="number" step="0.01" class="form-control" id="tempk" name="tempk" required>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Save Health Data</button>
+    </form>
+}
+else
+{
+    <p>You do not have permission to view this content.</p>
+}
+<style>
+    .search-container {
+        /* Container to control the position of the dropdown */
+        width: 100%; /* Adjust as needed */
+        max-width: 300px; /* Adjust as needed */
+    }
+
+    #searchResults {
+        z-index: 1051; /* Ensure it's above other content */
+        max-height: 300px; /* Limit height and make scrollable */
+        overflow-y: auto;
+    }
+</style>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#patientSearch').keyup(function () {
+            var searchTerm = $(this).val();
+            if (searchTerm.length > 0) { // Trigger search for 3 or more characters
+                $.ajax({
+                    url: '@Url.Action("SearchPatients", "HealthData")',
+                    type: 'GET',
+                    data: { term: searchTerm },
+                    success: function (data) {
+                        var $searchResults = $('#searchResults');
+                        $searchResults.empty(); // Clear previous results
+
+                        if (data && data.length > 0) {
+                            $.each(data, function (i, fullName) { // Assuming `data` is an array of strings (patient full names)
+                                var listItem = $('<li>')
+                                    .addClass('list-group-item list-group-item-action')
+                                    .text(fullName) // Directly use the fullName string
+                                    .click(function () {
+                                        $('#patientSearch').val(fullName); // Update textbox with selected patient name
+                                        $('#selectedPatientName').val(fullName); // Update hidden field with selected patient name
+                                        $searchResults.hide();
+                                        return false; // Prevent the default action
+                                    });
+                                $searchResults.append(listItem);
+                            });
+
+                            $searchResults.show(); // Show results
+                        } else {
+                            $searchResults.hide(); // Hide results if none
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + status + " " + error);
+                    }
+                });
+            } else {
+                $('#searchResults').empty().hide(); // Hide dropdown if searchTerm is less than 3 characters
+            }
+        });
+
+        // Hide the searchResults list when clicking outside
+        $(document).click(function (event) {
+            if (!$(event.target).closest('#patientSearch, #searchResults').length) {
+                $('#searchResults').hide();
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        // Listen for changes on the #patientSearch input
+        $('#patientSearch').change(function () {
+            // Check if the input has a value
+            if ($(this).val() !== '') {
+                // If there is a value, show the patient details form
+                $('#patientDetails').slideDown(); // Use slideDown for a smooth transition
+            } else {
+                // If the input is empty, hide the patient details form
+                $('#patientDetails').slideUp(); // Use slideUp to hide with a smooth transition
+            }
+        });
+
+        // Update hidden field with patient name when search input changes
+        $('#patientSearch').on('input', function () {
+            var patientName = $(this).val();
+            $('#selectedPatientName').val(patientName);
+        });
+
+        // Handle click on search results
+        $('#searchResults').on('click', 'li', function () {
+            var selectedPatientName = $(this).text();
+            $('#patientSearch').val(selectedPatientName); // Update search box with selected patient name
+            $('#selectedPatientName').val(selectedPatientName); // Update hidden field with selected patient name
+            $('#searchResults').hide(); // Hide search results
+            $('#patientDetails').slideDown(); // Show patient details form
+        });
+    });
+</script>
