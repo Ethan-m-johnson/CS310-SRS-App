@@ -7,7 +7,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Prescription ID</th>
                 <th>Prescription Name</th>
                 <th>Pharmacy</th>
                 <th>Quantity</th>
@@ -23,7 +22,6 @@
             @foreach (var prescription in Model)
             {
                 <tr>
-                    <td>@prescription.PrescriptionId</td>
                     <td>@prescription.PrescriptionName</td>
                     <td>@prescription.Pharmacy</td>
                     <td>@prescription.Quantity</td>
@@ -36,11 +34,11 @@
                     <td>
                         @if (prescription.Refills.HasValue && prescription .Refills > 0)
                         {
-                            <button onclick="requestRefill(@prescription .PrescriptionId)" class="btn btn-primary">Request Refill</button>
+                            <a onclick="requestRefill(@prescription .PrescriptionId)" class="btn btn-primary">Refill Requested</a>
                         }
                         else
                         {
-                            <button disabled class="btn btn-secondary">No Refills</button>
+                            <a disabled class="btn btn-secondary"></a>
                         }
                     </td>
 

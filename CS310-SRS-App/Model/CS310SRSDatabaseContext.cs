@@ -350,7 +350,7 @@ namespace CS310_SRS_App.Model
 
                 entity.Property(e => e.RefillRequested).HasColumnType("bit");
 
-                entity.Property(e => e.Quantity).HasColumnType("decimal(30, 15)");
+                entity.Property(e => e.Quantity).HasColumnType("int");
 
                 entity.HasOne(d => d.Patient)
                     .WithMany()
