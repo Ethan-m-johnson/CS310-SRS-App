@@ -18,7 +18,7 @@ namespace CS310_SRS_App.Model
         public int? Refills { get; set; }
         public DateTime? DatePrescribed { get; set; }
         public DateTime? Expiration { get; set; }
-
+        public bool RefillRequested { get; set; }
         public virtual Patient? Patient { get; set; }
         public virtual staff? PrescriberStaff { get; set; }
     }
