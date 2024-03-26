@@ -633,9 +633,12 @@ namespace CS310_SRS_App.Controllers
         // POST: Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Users/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,FirstName,MiddleName,LastName,Address,DateOfBirth,Gender,Email,Phone,Username,Password")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,FirstName,MiddleName,LastName,Address,DateOfBirth,Gender,Email,Phone,Username")] User user)
         {
             if (id != user.UserId)
             {
@@ -646,7 +649,22 @@ namespace CS310_SRS_App.Controllers
             {
                 try
                 {
-                    _context.Update(user);
+                    // Get the existing user from the database
+                    var existingUser = await _context.Users.FindAsync(id);
+
+                    // Update the properties of the existing user object with the new values
+                    existingUser.FirstName = user.FirstName;
+                    existingUser.MiddleName = user.MiddleName;
+                    existingUser.LastName = user.LastName;
+                    existingUser.Address = user.Address;
+                    existingUser.DateOfBirth = user.DateOfBirth;
+                    existingUser.Gender = user.Gender;
+                    existingUser.Email = user.Email;
+                    existingUser.Phone = user.Phone;
+                    existingUser.Username = user.Username;
+
+                    // Update the user in the database
+                    _context.Update(existingUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
