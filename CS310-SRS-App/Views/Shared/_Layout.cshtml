@@ -44,6 +44,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
                                 </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Prescription" asp-action="ViewPrescriptions">View Prescriptions</a>
+                                </li>
                         }
                         @if (Context.Session.GetString("SessionKeyRole") == "Staff")
                         {
@@ -55,11 +59,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="InviteUsers">Patient Invitation</a>
                                 </li>
-                                @*
-                                <li class="nav-item">
 
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Prescription" asp-action="StaffPrescription">Write Prescriptions</a>
                                 </li>
-                                *@
 
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
