@@ -248,7 +248,7 @@ namespace CS310_SRS_App.Controllers
             ViewBag.ErrorMessage = "An Error Occured When Saving The Health Data. Try Again.";
             return View("StaffHealthData");
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> SearchPatients(string term)
         {

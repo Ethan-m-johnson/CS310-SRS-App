@@ -60,6 +60,8 @@ namespace CS310_SRS_App.Model
                     .HasConstraintName("FK_Admin_User");
             });
 
+       
+
             modelBuilder.Entity<Appointment>(entity =>
             {
                 entity.HasKey(e => new { e.PatientId, e.StaffId, e.DateTime});
@@ -202,9 +204,12 @@ namespace CS310_SRS_App.Model
 
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.HasNoKey();
-
+               
                 entity.ToTable("Message");
+
+                entity.Property(e => e.MessageId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("MessageID");
 
                 entity.Property(e => e.ContactId).HasColumnName("ContactID");
 

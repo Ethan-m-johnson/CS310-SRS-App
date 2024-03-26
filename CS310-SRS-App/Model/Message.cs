@@ -5,6 +5,8 @@ namespace CS310_SRS_App.Model
 {
     public partial class Message
     {
+        //defining PK
+        public int MessageId { get; set; }
         public int ContactId { get; set; }
         public int UserId { get; set; }
         public DateTime? DateSent { get; set; }

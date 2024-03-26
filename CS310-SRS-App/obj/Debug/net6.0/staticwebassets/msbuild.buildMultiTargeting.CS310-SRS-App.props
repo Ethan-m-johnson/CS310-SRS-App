@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/CS310-SRS-App.props" />
+</Project>
