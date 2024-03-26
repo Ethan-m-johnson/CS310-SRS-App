@@ -28,7 +28,7 @@ namespace CS310_SRS_App.Model
         public virtual DbSet<Patient> Patients { get; set; } = null!;
         public virtual DbSet<PatientChart> PatientCharts { get; set; } = null!;
         public virtual DbSet<PatientDocument> PatientDocuments { get; set; } = null!;
-        public virtual DbSet<Perscription> Perscriptions { get; set; } = null!;
+        public virtual DbSet<Prescription> Prescriptions { get; set; } = null!;
         public virtual DbSet<User> Users{ get; set; } = null!;
         public virtual DbSet<staff> staff { get; set; } = null!;
 
@@ -60,9 +60,11 @@ namespace CS310_SRS_App.Model
                     .HasConstraintName("FK_Admin_User");
             });
 
+       
+
             modelBuilder.Entity<Appointment>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.PatientId, e.StaffId, e.DateTime});
 
                 entity.ToTable("Appointment");
 
@@ -202,9 +204,12 @@ namespace CS310_SRS_App.Model
 
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.HasNoKey();
-
+               
                 entity.ToTable("Message");
+
+                entity.Property(e => e.MessageId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("MessageID");
 
                 entity.Property(e => e.ContactId).HasColumnName("ContactID");
 
@@ -234,7 +239,7 @@ namespace CS310_SRS_App.Model
                 entity.ToTable("Patient");
 
                 entity.Property(e => e.PatientId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("PatientID");
 
                 entity.Property(e => e.PrPhysicianId).HasColumnName("PrPhysicianID");
@@ -314,15 +319,15 @@ namespace CS310_SRS_App.Model
                     .HasConstraintName("FK_uploadUserID");
             });
 
-            modelBuilder.Entity<Perscription>(entity =>
+            modelBuilder.Entity<Prescription>(entity =>
             {
                 entity.HasNoKey();
 
-                entity.ToTable("Perscription");
+                entity.ToTable("Prescription");
 
                 entity.Property(e => e.DateDistributed).HasColumnType("datetime");
 
-                entity.Property(e => e.DatePerscribed).HasColumnType("datetime");
+                entity.Property(e => e.DatePrescribed).HasColumnType("datetime");
 
                 entity.Property(e => e.DirectionsForUse).IsUnicode(false);
 
@@ -338,9 +343,9 @@ namespace CS310_SRS_App.Model
 
                 entity.Property(e => e.PatientId).HasColumnName("PatientID");
 
-                entity.Property(e => e.PerscriberStaffId).HasColumnName("PerscriberStaffID");
+                entity.Property(e => e.PrescriberStaffId).HasColumnName("PrescriberStaffID");
 
-                entity.Property(e => e.PerscriptionName)
+                entity.Property(e => e.PrescriptionName)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -353,12 +358,12 @@ namespace CS310_SRS_App.Model
                 entity.HasOne(d => d.Patient)
                     .WithMany()
                     .HasForeignKey(d => d.PatientId)
-                    .HasConstraintName("FK_Perscription_Patient");
+                    .HasConstraintName("FK_Prescription_Patient");
 
-                entity.HasOne(d => d.PerscriberStaff)
+                entity.HasOne(d => d.PrescriberStaff)
                     .WithMany()
-                    .HasForeignKey(d => d.PerscriberStaffId)
-                    .HasConstraintName("FK_Perscription_Staff");
+                    .HasForeignKey(d => d.PrescriberStaffId)
+                    .HasConstraintName("FK_Prescription_Staff");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -403,7 +408,7 @@ namespace CS310_SRS_App.Model
                 entity.ToTable("Staff");
 
                 entity.Property(e => e.StaffId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("StaffID");
 
                 entity.Property(e => e.Salary).HasColumnType("decimal(30, 15)");

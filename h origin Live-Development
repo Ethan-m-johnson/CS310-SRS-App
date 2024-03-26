@@ -1,0 +1,121 @@
+[33mcommit e368080f6700d648092a76e3bb5207378b3c9f17[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mLive-Development[m[33m)[m
+Merge: 8769236 1ef6ed5
+Author: Ethan-m-johnson <johnsonethan014@gmail.com>
+Date:   Mon Mar 25 19:44:34 2024 -0400
+
+    Resolve merge conflicts by removing non-essential files from tracking
+
+[33mcommit 87692361069c9f06c41f721891da0f3d1d61d52f[m[33m ([m[1;31morigin/mirandasimpson-dev[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/Live-Development[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/EmilyDEV2[m[33m, [m[1;32mmain[m[33m, [m[1;32mDevelopment-BranchFromThis[m[33m)[m
+Merge: 56c0e8f 46b6f22
+Author: Ethan-m-johnson <133664606+Ethan-m-johnson@users.noreply.github.com>
+Date:   Mon Mar 25 12:06:46 2024 -0400
+
+    Merge pull request #9 from Ethan-m-johnson/Live-Development
+    
+    Live development
+
+[33mcommit 46b6f22fb3101510596231f466301dca2d184c2d[m[33m ([m[1;31morigin/EthanJ-dev[m[33m)[m
+Author: Ethan-m-johnson <133664606+Ethan-m-johnson@users.noreply.github.com>
+Date:   Mon Mar 25 11:48:55 2024 -0400
+
+    Cleaned up layout / navbar
+    
+    title
+
+[33mcommit 3923acd88d38b01f07e28658916bba38d268b142[m
+Merge: 7b202d5 8bc5fe3
+Author: Ethan-m-johnson <133664606+Ethan-m-johnson@users.noreply.github.com>
+Date:   Mon Mar 25 10:32:55 2024 -0400
+
+    Merge pull request #8 from Ethan-m-johnson/EthanJ-dev
+    
+    Ethan j dev
+
+[33mcommit 8bc5fe3ba133d086323061209918c1d24f8074da[m
+Author: Ethan-m-johnson <133664606+Ethan-m-johnson@users.noreply.github.com>
+Date:   Mon Mar 25 10:31:59 2024 -0400
+
+    Patient Health Data: Exporting PDF Functionality
+
+[33mcommit ef9fce926e1630250b6f3f4992f3555e904a03f3[m[33m ([m[1;32mEthanJ-dev[m[33m)[m
+Author: Ethan-m-johnson <johnsonethan014@gmail.com>
+Date:   Sun Mar 24 21:16:18 2024 -0400
+
+    Patient Docx
+    
+    Staff can search for any patient and submit health data, PAtient can then see that health information from their account.
+    
+    Still in the process of implementing exporting health data to PDF
+
+[33mcommit 1ef6ed5088ba34f373e8039393a94a5fe0d015a0[m[33m ([m[1;31morigin/Aiden-M-Dev[m[33m, [m[1;32mAiden-M-Dev[m[33m)[m
+Author: mckenzie79 <mckenzie79@marshall.edu>
+Date:   Sun Mar 24 14:56:13 2024 -0400
+
+    CRUD Appointments (View/Controller)
+    
+    *This commit edited the dbcontext to reflect the changes made to Staff and Patient auto-increment rules
+
+[33mcommit 7b202d57640bb776c930d4b834778aa91fe02e70[m[33m ([m[1;31morigin/Aiden-M-Dev-3/25[m[33m)[m
+Merge: 0f1f14b 0a708dd
+Author: Ethan-m-johnson <133664606+Ethan-m-johnson@users.noreply.github.com>
+Date:   Fri Mar 22 15:01:10 2024 -0400
+
+    Merge pull request #7 from Ethan-m-johnson/EthanJ-dev
+    
+    Reset Password / Logout Functionality
+
+[33mcommit 0a708dd73d2f4affe65df667e939e1cef5e97b95[m
+Author: Ethan-m-johnson <johnsonethan014@gmail.com>
+Date:   Fri Mar 22 15:00:40 2024 -0400
+
+    Reset Password / Logout Functionality
+
+[33mcommit 0f1f14b27c3137053b4b9cacf85e95ef604a80ee[m
+Merge: 56c0e8f 045881e
+Author: Ethan-m-johnson <133664606+Ethan-m-johnson@users.noreply.github.com>
+Date:   Thu Mar 21 21:58:42 2024 -0400
+
+    Merge pull request #6 from Ethan-m-johnson/EthanJ-Dev
+    
+    Login / Invite Users / User Role System / Email System
+
+[33mcommit 045881ec4e7876871a03ed5426738fb4a8292ef3[m
+Author: Ethan-m-johnson <johnsonethan014@gmail.com>
+Date:   Tue Mar 12 14:14:29 2024 -0400
+
+    Login / Invite Users / User Role System / Email System
+
+[33mcommit 56c0e8f4579c49112b20a7c1b54ac789c9f7b3ff[m[33m ([m[1;31morigin/ethanYoung-dev[m[33m)[m
+Merge: 1853283 3fb63b7
+Author: Ethan-m-johnson <133664606+Ethan-m-johnson@users.noreply.github.com>
+Date:   Tue Mar 5 13:05:10 2024 -0500
+
+    Merge pull request #4 from Ethan-m-johnson/Development-
+    
+    Fixing Main
+
+[33mcommit 3fb63b71a0467c3400890d954cceaf43519bea3c[m
+Author: Ethan-m-johnson <johnsonethan014@gmail.com>
+Date:   Tue Mar 5 13:02:39 2024 -0500
+
+    Update .gitignore and untrack ignored files
+
+[33mcommit 0bb0b5970ce1ffd3ec29f46c153e1c28317d1f31[m
+Author: Ethan-m-johnson <johnsonethan014@gmail.com>
+Date:   Tue Mar 5 12:34:21 2024 -0500
+
+    Scaffolding DB & Partial User Role / Account Creation Implementation
+    
+    Scaffolded the DB, all of the model classes now match the DB. Created the DB context.
+    
+    Generated all CRUD Views where the table contains a primary key.
+    
+    Implemented Account Creation via Email Invitation (Still needs to be worked on) It's Currently set up to where admins can invite admins & Staff, and Staff Users can invite patients
+
+[33mcommit 185328341a4a8ed7cc81818a5d8331ba1c0b5ffa[m
+Author: Ethan-m-johnson <133664606+Ethan-m-johnson@users.noreply.github.com>
+Date:   Thu Feb 22 10:31:32 2024 -0500
+
+    Initial Commit
+    
+    ASP.NET MVC (.NET6)

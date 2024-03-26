@@ -1,0 +1,62 @@
+﻿@model CS310_SRS_App.Model.Prescription
+
+<h2>Staff Prescriptions</h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+
+<form asp-action="SaveStaffPrescription" method="post">
+    <!-- Hidden field for PrescriptionID -->
+    <input type="hidden" asp-for="PrescriptionId" />
+    <div class="form-group">
+        <label for="FirstName">First Name:</label>
+        <input type="text" class="form-control" id="FirstName" name="FirstName" required>
+    </div>
+    <div class="form-group">
+        <label for="MiddleName">Middle Name (optional):</label>
+        <input type="text" class="form-control" id="MiddleName" name="MiddleName">
+    </div>
+    <div class="form-group">
+        <label for="LastName">Last Name:</label>
+        <input type="text" class="form-control" id="LastName" name="LastName" required>
+    </div>
+    <div class="form-group">
+        <label for="PrescriptionName">Prescription Name:</label>
+        <input type="text" class="form-control" id="PrescriptionName" name="PrescriptionName" value="@Model.PrescriptionName" required>
+    </div>
+    <div class="form-group">
+        <label for="DateDistributed">Date Distributed:</label>
+        <input type="date" class="form-control" id="DateDistributed" name="DateDistributed" value="@Model.DateDistributed?.ToString("yyyy-MM-dd")">
+    </div>
+    <div class="form-group">
+        <label for="Pharmacy">Pharmacy:</label>
+        <input type="text" class="form-control" id="Pharmacy" name="Pharmacy" value="@Model.Pharmacy">
+    </div>
+    <div class="form-group">
+        <label for="Dose">Dose:</label>
+        <input type="text" class="form-control" id="Dose" name="Dose" value="@Model.Dose">
+    </div>
+    <div class="form-group">
+        <label for="DosageForm">Dosage Form:</label>
+        <input type="text" class="form-control" id="DosageForm" name="DosageForm" value="@Model.DosageForm">
+    </div>
+    <div class="form-group">
+        <label for="DirectionsForUse">Directions For Use:</label>
+        <textarea class="form-control" id="DirectionsForUse" name="DirectionsForUse">@Model.DirectionsForUse</textarea>
+    </div>
+    <div class="form-group">
+        <label for="Refills">Refills:</label>
+        <input type="number" class="form-control" id="Refills" name="Refills" value="@Model.Refills">
+    </div>
+    <div class="form-group">
+        <label for="Expiration">Expiration:</label>
+        <input type="date" class="form-control" id="Expiration" name="Expiration" value="@Model.Expiration?.ToString("yyyy-MM-dd")">
+    </div>
+    @*<button type="submit" class="btn btn-primary">Save</button>*@
+    <button type="submit" class="btn btn-primary" asp-action="ViewPrescriptions">Save</button>
+    <a class="btn btn-secondary" asp-action="ViewPrescriptions">Cancel</a>
+</form>

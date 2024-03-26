@@ -1,0 +1,234 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+
+<h3>Search For Doctor to Message: </h3>
+<div class="search-container position-relative">
+    <input type="text" id="patientSearch" class="form-control" placeholder="Search doctors..." autocomplete="off">
+    <ul id="searchResults" class="list-group position-absolute w-100" style="display:none;"></ul>
+</div>
+<br />
+
+<form id="patientDetails" asp-action="sendMessage" method="post" style="display:none;">
+    <input type="hidden" name="senderId" value="currentUserId" />
+   
+    <select name="reciverId">
+
+
+    @*
+        @foreach (var user in Model)
+        {
+            <option value="@user.UserId">@user.Name</option>
+        }
+        *@
+
+        @if (Model != null)
+        {
+            @foreach (var message in Model)
+
+            {
+                if (message != null && message.RecieverId != null)
+                {
+                    <option value="@message.ReciverId">@message.ReceiverId</option>
+                }
+
+            }
+
+
+        }
+        else
+        {
+            <p>
+                No messages available
+            </p>
+        }
+
+    </select><br />
+    <textarea name="content" rows="4" cols="50"></textarea><br />
+    <button type="submit">Send Message</button>
+
+
+</form>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+    $(document).ready(function () {
+        $('#patientSearch').keyup(function () {
+            var searchTerm = $(this).val();
+            if (searchTerm.length > 0) { // Trigger search for 3 or more characters
+                $.ajax({
+                    url: '@Url.Action("SearchPatients", "Message")',
+                    type: 'GET',
+                    data: { term: searchTerm },
+                    success: function (data) {
+                        var $searchResults = $('#searchResults');
+                        $searchResults.empty(); // Clear previous results
+
+                        if (data && data.length > 0) {
+                            $.each(data, function (i, fullName) { // Assuming `data` is an array of strings (patient full names)
+                                var listItem = $('<li>')
+                                    .addClass('list-group-item list-group-item-action')
+                                    .text(fullName) // Directly use the fullName string
+                                    .click(function () {
+                                        $('#patientSearch').val(fullName); // Update textbox with selected patient name
+                                        $('#selectedPatientName').val(fullName); // Update hidden field with selected patient name
+                                        $searchResults.hide();
+                                        return false; // Prevent the default action
+                                    });
+                                $searchResults.append(listItem);
+                            });
+
+                            $searchResults.show(); // Show results
+                        } else {
+                            $searchResults.hide(); // Hide results if none
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + status + " " + error);
+                    }
+                });
+            } else {
+                $('#searchResults').empty().hide(); // Hide dropdown if searchTerm is less than 3 characters
+            }
+        });
+
+        // Hide the searchResults list when clicking outside
+        $(document).click(function (event) {
+            if (!$(event.target).closest('#patientSearch, #searchResults').length) {
+                $('#searchResults').hide();
+            }
+        });
+    });
+    </script>
+    <script>$(document).ready(function () {
+            // Listen for changes on the #patientSearch input
+            $('#patientSearch').change(function () {
+                // Check if the input has a value
+                if ($(this).val() !== '') {
+                    // If there is a value, show the patient details form
+                    $('#patientDetails').slideDown(); // Use slideDown for a smooth transition
+                } else {
+                    // If the input is empty, hide the patient details form
+                    $('#patientDetails').slideUp(); // Use slideUp to hide with a smooth transition
+                }
+            });
+
+            // Update hidden field with patient name when search input changes
+            $('#patientSearch').on('input', function () {
+                var patientName = $(this).val();
+                $('#selectedPatientName').val(patientName);
+            });
+
+            // Handle click on search results
+            $('#searchResults').on('click', 'li', function () {
+                var selectedPatientName = $(this).text();
+                $('#patientSearch').val(selectedPatientName); // Update search box with selected patient name
+                $('#selectedPatientName').val(selectedPatientName); // Update hidden field with selected patient name
+                $('#searchResults').hide(); // Hide search results
+                $('#patientDetails').slideDown(); // Show patient details form
+            });
+        });</script>
+
+@*
+        <head>
+            <meta charset="utf-8">
+            <title>Messages</title>
+
+        </head>
+        <body>
+            <header>
+                <div id="topPageContainer">
+                    <p>
+                        <h1>
+                            Messages
+                        </h1>
+                    </p>
+
+                </div>
+            </header>
+            <h3>Search For Patient and Enter Health Information: </h3>
+            <div class="search-container position-relative">
+                <input type="text" id="patientSearch" class="form-control" placeholder="Search patients..." autocomplete="off">
+                <ul id="searchResults" class="list-group position-absolute w-100" style="display:none;"></ul>
+            </div>
+            <br />
+
+
+            <div id="messagecontainer">
+
+                @if (Model != null && Model.Any())
+                {
+
+                    @foreach (var message in Model)
+                    {
+                        if (message != null)
+                        {
+                            <div class="message">
+                                <p> From : @message.SenderId</p>
+                                <p> Date : @message.DateSent</p>
+                                <p> @message.Message1</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="message">
+                                <p> Message Object is null</p>
+                            </div>
+                        }
+                    }
+                }
+                else
+                {
+                    <p>No previous messages available</p>
+                }
+
+                <!-- form for sending new messages-->
+                <form method="post" asp-action="SendMessage">
+                    <input type="hidden" name="senderId" value="currentUserId" />
+                    <label for="reciverId">To:</label>
+                    <select name="reciverId">
+
+
+
+                                    @foreach(var user in Model)
+                            {
+                                                <option value="@user.UserId">@user.Name</option>
+                                        }
+
+                        @if (Model != null)
+                        {
+                            @foreach (var message in Model)
+
+                            {
+                                if (message != null && message.RecieverId != null)
+                                {
+                                    <option value="@message.ReciverId">@message.ReceiverId</option>
+                                }
+
+                            }
+
+
+                        }
+                        else
+                        {
+                            <p>
+                                No messages available
+                            </p>
+                        }
+
+                    </select><br />
+                    <textarea name="content" rows="4" cols="50"></textarea><br />
+                    <button type="submit">Send Message</button>
+
+                </form>
+
+            </div>
+
+    *@
