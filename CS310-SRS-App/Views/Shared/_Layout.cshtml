@@ -29,62 +29,72 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                    
+
                         @if (Context.Session.GetString("SessionKeyRole") == "Patient")
                         {
                             @*Put Patient NavBar Items here*@
                             <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="PatientHealthData">Your Health Data</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="PatientHealthData">Your Health Data</a>
                             </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthCareProfessionals" asp-action="HealthCareProviders">Staff Search</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HealthCareProfessionals" asp-action="HealthCareProviders">Staff Search</a>
+                            </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
+                            </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Prescription" asp-action="ViewPrescriptions">View Prescriptions</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Prescription" asp-action="ViewPrescriptions">View Prescriptions</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="MessagePage">Send a Message</a>
+                            </li>
                         }
                         @if (Context.Session.GetString("SessionKeyRole") == "Staff")
                         {
-                                @*Put Staff NavBar Items here*@
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Enter Health Data</a>
-                                </li>
+                            @*Put Staff NavBar Items here*@
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Enter Health Data</a>
+                            </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="InviteUsers">Patient Invitation</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="InviteUsers">Patient Invitation</a>
+                            </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Prescription" asp-action="StaffPrescription">Write Prescriptions</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Prescription" asp-action="StaffPrescription">Write Prescriptions</a>
+                            </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="Index">Send a Message</a>
+                            </li>
                         }
                         @if (Context.Session.GetString("SessionKeyRole") == "Admin")
                         {
                             @*Put Admin NavBar Items here*@
-                                @*<li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Staff Health Data</a>
-                                </li>*@
+                            @*<li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="HealthData" asp-action="StaffHealthData">Staff Health Data</a>
+            </li>*@
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="InviteUsers">Admin/Staff Invitation</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="HealthCareProfessionals" asp-action="RemoveDoctor">Remove Doctor</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="InviteUsers">Admin/Staff Invitation</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HealthCareProfessionals" asp-action="RemoveDoctor">Remove Doctor</a>
+                            </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
-                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="Index">Send a Message</a>
+                            </li>
                         }
                     </ul>
 

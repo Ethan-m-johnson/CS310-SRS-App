@@ -15,8 +15,7 @@
 
 <form id="patientDetails" asp-action="sendMessage" method="post" style="display:none;">
     <input type="hidden" name="senderId" value="currentUserId" />
-   
-    <select name="reciverId">
+    @*<select name="reciverId">*@
 
 
     @*
@@ -24,7 +23,7 @@
         {
             <option value="@user.UserId">@user.Name</option>
         }
-        *@
+        
 
         @if (Model != null)
         {
@@ -45,7 +44,7 @@
             <p>
                 No messages available
             </p>
-        }
+        }*@
 
     </select><br />
     <textarea name="content" rows="4" cols="50"></textarea><br />
