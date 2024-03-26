@@ -9,9 +9,10 @@
     </div>
 }
 
-<form asp-action="SaveStaffPrescription" method="post">
+<form asp-action="SavePrescription" method="post">
     <!-- Hidden field for PrescriptionID -->
     <input type="hidden" asp-for="PrescriptionId" />
+
     <div class="form-group">
         <label for="FirstName">First Name:</label>
         <input type="text" class="form-control" id="FirstName" name="FirstName" required>
@@ -26,41 +27,36 @@
     </div>
     <div class="form-group">
         <label for="PrescriptionName">Prescription Name:</label>
-        <input type="text" class="form-control" id="PrescriptionName" name="PrescriptionName" value="@Model.PrescriptionName" required>
+        <input type="text" class="form-control" id="PrescriptionName" name="PrescriptionName" asp-for="PrescriptionName" required>
     </div>
     <div class="form-group">
         <label for="DateDistributed">Date Distributed:</label>
-        <input type="date" class="form-control" id="DateDistributed" name="DateDistributed" value="@Model.DateDistributed?.ToString("yyyy-MM-dd")">
+        <input type="date" class="form-control" id="DateDistributed" name="DateDistributed" asp-for="DateDistributed">
     </div>
     <div class="form-group">
         <label for="Pharmacy">Pharmacy:</label>
-        <input type="text" class="form-control" id="Pharmacy" name="Pharmacy" value="@Model.Pharmacy">
+        <input type="text" class="form-control" id="Pharmacy" name="Pharmacy" asp-for="Pharmacy">
     </div>
     <div class="form-group">
         <label for="Dose">Dose:</label>
-        <input type="text" class="form-control" id="Dose" name="Dose" value="@Model.Dose">
+        <input type="text" class="form-control" id="Dose" name="Dose" asp-for="Dose">
     </div>
     <div class="form-group">
         <label for="DosageForm">Dosage Form:</label>
-        <input type="text" class="form-control" id="DosageForm" name="DosageForm" value="@Model.DosageForm">
-    </div>
-    <div class="form-group">
-        <label for="Quantity">Quantity:</label>
-        <input type="text" class="form-control" id="Quantity" name="Quantity" value="@Model.Quantity">
+        <input type="text" class="form-control" id="DosageForm" name="DosageForm" asp-for="DosageForm">
     </div>
     <div class="form-group">
         <label for="DirectionsForUse">Directions For Use:</label>
-        <textarea class="form-control" id="DirectionsForUse" name="DirectionsForUse">@Model.DirectionsForUse</textarea>
+        <textarea class="form-control" id="DirectionsForUse" name="DirectionsForUse" asp-for="DirectionsForUse"></textarea>
     </div>
     <div class="form-group">
         <label for="Refills">Refills:</label>
-        <input type="number" class="form-control" id="Refills" name="Refills" value="@Model.Refills">
+        <input type="number" class="form-control" id="Refills" name="Refills" asp-for="Refills">
     </div>
     <div class="form-group">
         <label for="Expiration">Expiration:</label>
-        <input type="date" class="form-control" id="Expiration" name="Expiration" value="@Model.Expiration?.ToString("yyyy-MM-dd")">
+        <input type="date" class="form-control" id="Expiration" name="Expiration" asp-for="Expiration">
     </div>
-    @*<button type="submit" class="btn btn-primary">Save</button>*@
     <button type="submit" class="btn btn-primary" asp-action="ViewPrescriptions">Save</button>
     <a class="btn btn-secondary" asp-action="ViewPrescriptions">Cancel</a>
 </form>

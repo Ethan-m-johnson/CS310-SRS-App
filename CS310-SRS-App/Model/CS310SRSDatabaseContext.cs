@@ -321,9 +321,12 @@ namespace CS310_SRS_App.Model
 
             modelBuilder.Entity<Prescription>(entity =>
             {
-                entity.HasNoKey();
+                _ = entity.HasKey(e => e.PrescriptionId);
 
                 entity.ToTable("Prescription");
+
+
+                entity.Property(e => e.PrescriptionId).HasColumnName("PrescriptionId");
 
                 entity.Property(e => e.DateDistributed).HasColumnType("datetime");
 
@@ -366,6 +369,8 @@ namespace CS310_SRS_App.Model
                     .WithMany()
                     .HasForeignKey(d => d.PrescriberStaffId)
                     .HasConstraintName("FK_Prescription_Staff");
+
+                
             });
 
             modelBuilder.Entity<User>(entity =>
