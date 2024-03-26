@@ -155,7 +155,11 @@ namespace CS310_SRS_App.Controllers
 
             return Json(patientNames);
         }
-
+        public IActionResult PrescriptionRequests()
+        {
+            var requestedPrescriptions = _context.Prescriptions.Where(p => p.RefillRequested).ToList();
+            return View(requestedPrescriptions);
+        }
         public IActionResult Index()
         {
             return View();

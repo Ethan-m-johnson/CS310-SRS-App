@@ -63,10 +63,13 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Prescription" asp-action="StaffPrescription">Write Prescriptions</a>
                                 </li>
-
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Prescription" asp-action="PrescriptionRequests">Prescription Requests</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Appointments" asp-action="Index">Appointments</a>
                                 </li>
+
                         }
                         @if (Context.Session.GetString("SessionKeyRole") == "Admin")
                         {
