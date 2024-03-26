@@ -21,9 +21,10 @@
                     <th>Pharmacy</th>
                     <th>Dose</th>
                     <th>Dosage Form</th>
+                    <th>Quantity</th>
                     <th>Directions For Use</th>
                     <th>Refills</th>
-                    <th>Expiration</th>
+                    @*<th>Expiration</th>*@
                     @*<th>Refill Requested</th>*@
                     @*<th>Action</th>*@
                 </tr>
@@ -38,9 +39,10 @@
                         <td>@prescription.Pharmacy</td>
                         <td>@prescription.Dose</td>
                         <td>@prescription.DosageForm</td>
+                        <td>@prescription.Quantity</td>
                         <td>@prescription.DirectionsForUse</td>
                         <td>@(prescription.Refills.HasValue && prescription.Refills > 0 ? prescription.Refills.Value.ToString() : "None")</td>
-                        <td>@(prescription.Expiration.HasValue ? prescription.Expiration.Value.ToString("MM/dd/yyyy") : "N/A")</td>
+                        @*<td>@(prescription.Expiration.HasValue ? prescription.Expiration.Value.ToString("MM/dd/yyyy") : "N/A")</td>*@
                         @*<td>
             @if (prescription.RefillRequested)
             {
