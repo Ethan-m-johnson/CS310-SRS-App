@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<CS310_SRS_App.Model.Prescription>
 
-@if (Context.Session.GetString("SessionKeyRole") == "Patient")
-{
+
     @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
     {
         <div class="alert alert-danger">
@@ -64,11 +63,7 @@
     {
         <p>No prescriptions available.</p>
     }
-}
-else
-{
-    <p>You do not have permission to view this content.</p>
-}
+
 
 @section Scripts {
     <script>
