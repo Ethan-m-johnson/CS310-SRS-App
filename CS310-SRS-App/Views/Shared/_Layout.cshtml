@@ -48,6 +48,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Prescription" asp-action="ViewPrescriptions">View Prescriptions</a>
                                 </li>
+                                
+                                <li class="nav-item">
+                                     <a class="nav-link text-dark" asp-area="" asp-controller="Message" asp-action="MessagePage">Send a Message</a>
+                                </li>
                         }
                         @if (Context.Session.GetString("SessionKeyRole") == "Staff")
                         {
