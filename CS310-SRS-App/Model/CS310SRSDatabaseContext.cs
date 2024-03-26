@@ -28,7 +28,7 @@ namespace CS310_SRS_App.Model
         public virtual DbSet<Patient> Patients { get; set; } = null!;
         public virtual DbSet<PatientChart> PatientCharts { get; set; } = null!;
         public virtual DbSet<PatientDocument> PatientDocuments { get; set; } = null!;
-        public virtual DbSet<Perscription> Perscriptions { get; set; } = null!;
+        public virtual DbSet<Prescription> Prescriptions { get; set; } = null!;
         public virtual DbSet<User> Users{ get; set; } = null!;
         public virtual DbSet<staff> staff { get; set; } = null!;
 
@@ -314,15 +314,15 @@ namespace CS310_SRS_App.Model
                     .HasConstraintName("FK_uploadUserID");
             });
 
-            modelBuilder.Entity<Perscription>(entity =>
+            modelBuilder.Entity<Prescription>(entity =>
             {
                 entity.HasNoKey();
 
-                entity.ToTable("Perscription");
+                entity.ToTable("Prescription");
 
                 entity.Property(e => e.DateDistributed).HasColumnType("datetime");
 
-                entity.Property(e => e.DatePerscribed).HasColumnType("datetime");
+                entity.Property(e => e.DatePrescribed).HasColumnType("datetime");
 
                 entity.Property(e => e.DirectionsForUse).IsUnicode(false);
 
@@ -338,9 +338,9 @@ namespace CS310_SRS_App.Model
 
                 entity.Property(e => e.PatientId).HasColumnName("PatientID");
 
-                entity.Property(e => e.PerscriberStaffId).HasColumnName("PerscriberStaffID");
+                entity.Property(e => e.PrescriberStaffId).HasColumnName("PrescriberStaffID");
 
-                entity.Property(e => e.PerscriptionName)
+                entity.Property(e => e.PrescriptionName)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -353,12 +353,12 @@ namespace CS310_SRS_App.Model
                 entity.HasOne(d => d.Patient)
                     .WithMany()
                     .HasForeignKey(d => d.PatientId)
-                    .HasConstraintName("FK_Perscription_Patient");
+                    .HasConstraintName("FK_Prescription_Patient");
 
-                entity.HasOne(d => d.PerscriberStaff)
+                entity.HasOne(d => d.PrescriberStaff)
                     .WithMany()
-                    .HasForeignKey(d => d.PerscriberStaffId)
-                    .HasConstraintName("FK_Perscription_Staff");
+                    .HasForeignKey(d => d.PrescriberStaffId)
+                    .HasConstraintName("FK_Prescription_Staff");
             });
 
             modelBuilder.Entity<User>(entity =>
