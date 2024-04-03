@@ -70,6 +70,8 @@ namespace CS310_SRS_App.Controllers
                     // Attach the patient ID to the prescription
                     model.PatientId = patientId;
 
+                    
+
                     // Set other properties of the model as needed
                     model.DatePrescribed = DateTime.Now;
 

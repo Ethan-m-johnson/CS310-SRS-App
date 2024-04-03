@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CS310-SRS-App")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ab1303c68a06b8d42ab1315c1ca191b8fcb1c25e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+424183497c2e8d33b741e5888831c4eab2f8b3e5")]
 [assembly: System.Reflection.AssemblyProductAttribute("CS310-SRS-App")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CS310-SRS-App")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

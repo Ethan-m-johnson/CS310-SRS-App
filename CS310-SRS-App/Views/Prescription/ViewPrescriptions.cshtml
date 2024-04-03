@@ -17,16 +17,13 @@
                 <tr>
                     <th>Prescription Name</th>
                     <th>Date Prescribed</th>
-                    <th>Date Distributed</th>
+                    <th>Expiration</th>
                     <th>Pharmacy</th>
                     <th>Dose</th>
                     <th>Dosage Form</th>
-                    <th>Quantity</th>
+                    @*<th>Quantity</th>*@
                     <th>Directions For Use</th>
                     <th>Refills</th>
-                    @*<th>Expiration</th>*@
-                    @*<th>Refill Requested</th>*@
-                    @*<th>Action</th>*@
                 </tr>
             </thead>
             <tbody>
@@ -35,26 +32,14 @@
                     <tr>
                         <td>@prescription.PrescriptionName</td>
                         <td>@(prescription.DatePrescribed.HasValue ? prescription.DatePrescribed.Value.ToString("MM/dd/yyyy") : "N/A")</td>
-                        <td>@(prescription.DateDistributed.HasValue ? prescription.DateDistributed.Value.ToString("MM/dd/yyyy") : "N/A")</td>
+                        <td>@(prescription.Expiration.HasValue ? prescription.Expiration.Value.ToString("MM/dd/yyyy") : "N/A")</td>
                         <td>@prescription.Pharmacy</td>
                         <td>@prescription.Dose</td>
                         <td>@prescription.DosageForm</td>
-                        <td>@prescription.Quantity</td>
+                        @*<td>@prescription.Quantity</td>*@
                         <td>@prescription.DirectionsForUse</td>
                         <td>@(prescription.Refills.HasValue && prescription.Refills > 0 ? prescription.Refills.Value.ToString() : "None")</td>
-                        @*<td>@(prescription.Expiration.HasValue ? prescription.Expiration.Value.ToString("MM/dd/yyyy") : "N/A")</td>*@
-                        @*<td>
-            @if (prescription.RefillRequested)
-            {
-            <span>Refill Requested</span>
-            }
-            </td>
-            <td>
-            Button to request refill
-            <button onclick="requestRefill('@prescription.PrescriptionId')" class="btn btn-primary">Request Refill</button>
-            Button to delete prescription
-            <button onclick="confirmDelete('@prescription.PrescriptionId')" class="btn btn-danger">Delete</button>
-            </td>*@
+                        
                     </tr>
                 }
             </tbody>
@@ -68,20 +53,4 @@
 else
 {
     <p>Prescription added.</p>
-}
-
-@section Scripts {
-    <script>
-        @*function requestRefill(prescriptionId) {
-        // You can implement the refill request logic here
-        console.log('Refill requested for prescription ID:', prescriptionId);
-        }*@
-
-            function confirmDelete(prescriptionId) {
-                if (confirm("Are you sure you want to delete this prescription?")) {
-                    // You can implement the delete logic here
-                    console.log('Prescription deleted:', prescriptionId);
-                }
-            }
-    </script>
 }
