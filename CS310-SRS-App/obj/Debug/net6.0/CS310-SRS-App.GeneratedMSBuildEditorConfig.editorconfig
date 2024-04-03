@@ -92,8 +92,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/mirandasimpson/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Message/ErrorMessagePage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWVzc2FnZS9FcnJvck1lc3NhZ2VQYWdlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/mirandasimpson/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Message/MessagePage.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWVzc2FnZS9NZXNzYWdlUGFnZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/mirandasimpson/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Message/SuccessMessagePage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWVzc2FnZS9TdWNjZXNzTWVzc2FnZVBhZ2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/mirandasimpson/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Prescription/StaffPrescription.cshtml]

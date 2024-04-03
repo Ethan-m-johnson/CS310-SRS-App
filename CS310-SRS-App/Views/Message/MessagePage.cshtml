@@ -8,48 +8,21 @@
 
 <h3>Search For Doctor to Message: </h3>
 <div class="search-container position-relative">
-    <input type="text" id="patientSearch" class="form-control" placeholder="Search doctors..." autocomplete="off">
+    <input type="text" name="docName" id="patientSearch" class="form-control" placeholder="Search doctors..." autocomplete="off">
     <ul id="searchResults" class="list-group position-absolute w-100" style="display:none;"></ul>
 </div>
 <br />
 
-<form id="patientDetails" asp-action="sendMessage" method="post" style="display:none;">
-    <input type="hidden" name="senderId" value="currentUserId" />
-    @*<select name="reciverId">*@
 
-
-    @*
-        @foreach (var user in Model)
-        {
-            <option value="@user.UserId">@user.Name</option>
-        }
-        
-
-        @if (Model != null)
-        {
-            @foreach (var message in Model)
-
-            {
-                if (message != null && message.RecieverId != null)
-                {
-                    <option value="@message.ReciverId">@message.ReceiverId</option>
-                }
-
-            }
-
-
-        }
-        else
-        {
-            <p>
-                No messages available
-            </p>
-        }*@
-
-    </select><br />
-    <textarea name="content" rows="4" cols="50"></textarea><br />
-    <button type="submit">Send Message</button>
-
+<form id="patientDetails" asp-controller="Message" asp-action="sendMessageEmail" method="post" style="display:none;">
+    
+    <input type="hidden" name="docName" id="selectedPatientName"class="form-control" value="currentUserId" />
+    <p>From:  <br /></p>
+    <input type="text" name="senderName" id="sender" class="form-control" placeholder="Your name here."><br />
+    <p>Please include your full name and date of birth in your message.</br>
+    If this is an emergency please STOP and call 911.</p>
+    <textarea name="body" class="form-control" rows="4" cols="50" placeholder="Your message here."></textarea><br />
+    <button class="btn btn-primary" type="submit">Send Message</button>
 
 </form>
 
