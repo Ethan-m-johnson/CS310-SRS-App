@@ -12,7 +12,7 @@
     </div>
 }
 
-@if (Context.Session.GetString("SessionKeyRole") == "Admin" || (Context.Session.GetString("SessionKeyRole") == "Staff"))
+@if (Context.Session.GetString("SessionKeyRole") == "Staff" || (Context.Session.GetString("SessionKeyRole") == "Staff"))
 {
     <h3>Search For Patient and Enter Prescription Information:</h3>
     <div class="search-container position-relative">

@@ -102,10 +102,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlc2NyaXB0aW9uXFByZXNjcmlwdGlvblJlcXVlc3RzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/emily/OneDrive - Marshall University/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Prescription/PresriptionRequests.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlc2NyaXB0aW9uXFByZXNyaXB0aW9uUmVxdWVzdHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/emily/OneDrive - Marshall University/Documents/GitHub/CS310-SRS-App/CS310-SRS-App/Views/Prescription/StaffPrescription.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlc2NyaXB0aW9uXFN0YWZmUHJlc2NyaXB0aW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

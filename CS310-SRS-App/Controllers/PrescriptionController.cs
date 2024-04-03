@@ -26,6 +26,20 @@ namespace CS310_SRS_App.Controllers
             }
             return View("StaffPrescription");
         }
+        public IActionResult ViewPrescriptions()
+        {
+            if (HttpContext.Session.GetString("SessionKeyRole") != "Patient")
+            {
+                return View("ViewPrescriptions");
+            }
+
+            int currentUserId = Convert.ToInt32(HttpContext.Session.GetString("SessionKeyID"));
+            var patient = _context.Patients.FirstOrDefault(p => p.UserId == currentUserId);
+
+            var ViewPrescriptions = _context.Prescriptions.Where(p => p.PatientId == patient.PatientId).ToList();
+
+            return View(ViewPrescriptions);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -89,6 +103,11 @@ namespace CS310_SRS_App.Controllers
                 .ToListAsync();
 
             return Json(matchingPatients);
+        }
+        public IActionResult PrescriptionRequests()
+        {
+            var requestedPrescriptions = _context.Prescriptions.Where(p => p.RefillRequested).ToList();
+            return View(requestedPrescriptions);
         }
     }
 }
