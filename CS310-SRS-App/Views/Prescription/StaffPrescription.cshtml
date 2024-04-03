@@ -1,6 +1,9 @@
-﻿@model CS310_SRS_App.Model.Prescription
-
-<h2>Write Prescription</h2>
+﻿@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
 
 @if (ViewBag.ErrorMessage != null)
 {
@@ -9,54 +12,151 @@
     </div>
 }
 
-<form asp-action="SaveStaffPrescription" method="post">
-    <!-- Hidden field for PrescriptionID -->
-    <input type="hidden" asp-for="PrescriptionId" />
-    <div class="form-group">
-        <label for="FirstName">First Name:</label>
-        <input type="text" class="form-control" id="FirstName" name="FirstName" required>
+@if (Context.Session.GetString("SessionKeyRole") == "Admin" || (Context.Session.GetString("SessionKeyRole") == "Staff"))
+{
+    <h3>Search For Patient and Enter Prescription Information:</h3>
+    <div class="search-container position-relative">
+        <input type="text" id="patientSearch" class="form-control" placeholder="Search patients..." autocomplete="off">
+        <ul id="searchResults" class="list-group position-absolute w-100" style="display:none;"></ul>
     </div>
-    <div class="form-group">
-        <label for="MiddleName">Middle Name (optional):</label>
-        <input type="text" class="form-control" id="MiddleName" name="MiddleName">
-    </div>
-    <div class="form-group">
-        <label for="LastName">Last Name:</label>
-        <input type="text" class="form-control" id="LastName" name="LastName" required>
-    </div>
-    <div class="form-group">
-        <label for="PrescriptionName">Prescription Name:</label>
-        <input type="text" class="form-control" id="PrescriptionName" name="PrescriptionName" value="@Model.PrescriptionName" required>
-    </div>
-    <div class="form-group">
-        <label for="DateDistributed">Date Distributed:</label>
-        <input type="date" class="form-control" id="DateDistributed" name="DateDistributed" value="@Model.DateDistributed?.ToString("yyyy-MM-dd")">
-    </div>
-    <div class="form-group">
-        <label for="Pharmacy">Pharmacy:</label>
-        <input type="text" class="form-control" id="Pharmacy" name="Pharmacy" value="@Model.Pharmacy">
-    </div>
-    <div class="form-group">
-        <label for="Dose">Dose:</label>
-        <input type="text" class="form-control" id="Dose" name="Dose" value="@Model.Dose">
-    </div>
-    <div class="form-group">
-        <label for="DosageForm">Dosage Form:</label>
-        <input type="text" class="form-control" id="DosageForm" name="DosageForm" value="@Model.DosageForm">
-    </div>
-    <div class="form-group">
-        <label for="DirectionsForUse">Directions For Use:</label>
-        <textarea class="form-control" id="DirectionsForUse" name="DirectionsForUse">@Model.DirectionsForUse</textarea>
-    </div>
-    <div class="form-group">
-        <label for="Refills">Refills:</label>
-        <input type="number" class="form-control" id="Refills" name="Refills" value="@Model.Refills">
-    </div>
-    <div class="form-group">
-        <label for="Expiration">Expiration:</label>
-        <input type="date" class="form-control" id="Expiration" name="Expiration" value="@Model.Expiration?.ToString("yyyy-MM-dd")">
-    </div>
-    @*<button type="submit" class="btn btn-primary">Save</button>*@
-    <button type="submit" class="btn btn-primary" asp-action="ViewPrescriptions">Save</button>
-    <a class="btn btn-secondary" asp-action="ViewPrescriptions">Cancel</a>
-</form>
+    <br />
+    <form id="prescriptionForm" asp-action="SaveStaffPrescription" method="post" style="display:none;">
+        <h3>Prescription Details</h3>
+        <input type="hidden" id="selectedPatientName" name="selectedPatientName" value="">
+        <div class="form-group">
+            <label for="PrescriptionName">Prescription Name:</label>
+            <input type="text" class="form-control" id="PrescriptionName" name="PrescriptionName" required>
+        </div>
+        <div class="form-group">
+            <label for="DateDistributed">Date Distributed:</label>
+            <input type="date" class="form-control" id="DateDistributed" name="DateDistributed">
+        </div>
+        <div class="form-group">
+            <label for="Pharmacy">Pharmacy:</label>
+            <input type="text" class="form-control" id="Pharmacy" name="Pharmacy">
+        </div>
+        <div class="form-group">
+            <label for="Dose">Dose:</label>
+            <input type="text" class="form-control" id="Dose" name="Dose">
+        </div>
+        <div class="form-group">
+            <label for="DosageForm">Dosage Form:</label>
+            <input type="text" class="form-control" id="DosageForm" name="DosageForm">
+        </div>
+        <div class="form-group">
+            <label for="DirectionsForUse">Directions For Use:</label>
+            <textarea class="form-control" id="DirectionsForUse" name="DirectionsForUse"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="Refills">Refills:</label>
+            <input type="number" class="form-control" id="Refills" name="Refills">
+        </div>
+        <div class="form-group">
+            <label for="Expiration">Expiration:</label>
+            <input type="date" class="form-control" id="Expiration" name="Expiration">
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Save Prescription</button>
+    </form>
+}
+else
+{
+    <p>You do not have permission to view this content.</p>
+}
+
+<style>
+    .search-container {
+        /* Container to control the position of the dropdown */
+        width: 100%; /* Adjust as needed */
+        max-width: 300px; /* Adjust as needed */
+    }
+
+    #searchResults {
+        z-index: 1051; /* Ensure it's above other content */
+        max-height: 300px; /* Limit height and make scrollable */
+        overflow-y: auto;
+    }
+</style>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#patientSearch').keyup(function () {
+            var searchTerm = $(this).val();
+            if (searchTerm.length > 0) { // Trigger search for 3 or more characters
+                $.ajax({
+                    url: '@Url.Action("SearchPatients", "HealthData")',
+                    type: 'GET',
+                    data: { term: searchTerm },
+                    success: function (data) {
+                        var $searchResults = $('#searchResults');
+                        $searchResults.empty(); // Clear previous results
+
+                        if (data && data.length > 0) {
+                            $.each(data, function (i, fullName) { // Assuming `data` is an array of strings (patient full names)
+                                var listItem = $('<li>')
+                                    .addClass('list-group-item list-group-item-action')
+                                    .text(fullName) // Directly use the fullName string
+                                    .click(function () {
+                                        $('#patientSearch').val(fullName); // Update textbox with selected patient name
+                                        $('#selectedPatientName').val(fullName); // Update hidden field with selected patient name
+                                        $searchResults.hide();
+                                        return false; // Prevent the default action
+                                    });
+                                $searchResults.append(listItem);
+                            });
+
+                            $searchResults.show(); // Show results
+                        } else {
+                            $searchResults.hide(); // Hide results if none
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + status + " " + error);
+                    }
+                });
+            } else {
+                $('#searchResults').empty().hide(); // Hide dropdown if searchTerm is less than 3 characters
+            }
+        });
+
+        // Hide the searchResults list when clicking outside
+        $(document).click(function (event) {
+            if (!$(event.target).closest('#patientSearch, #searchResults').length) {
+                $('#searchResults').hide();
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        // Listen for changes on the #patientSearch input
+        $('#patientSearch').change(function () {
+            // Check if the input has a value
+            if ($(this).val() !== '') {
+                // If there is a value, show the patient details form
+                $('#prescriptionForm').slideDown(); // Use slideDown for a smooth transition
+            } else {
+                // If the input is empty, hide the patient details form
+                $('#prescriptionForm').slideUp(); // Use slideUp to hide with a smooth transition
+            }
+        });
+
+        // Update hidden field with patient name when search input changes
+        $('#patientSearch').on('input', function () {
+            var patientName = $(this).val();
+            $('#selectedPatientName').val(patientName);
+        });
+
+        // Handle click on search results
+        $('#searchResults').on('click', 'li', function () {
+            var selectedPatientName = $(this).text();
+            $('#patientSearch').val(selectedPatientName); // Update search box with selected patient name
+            $('#selectedPatientName').val(selectedPatientName); // Update hidden field with selected patient name
+            $('#searchResults').hide(); // Hide search results
+            $('#prescriptionForm').slideDown(); // Show prescription form
+        });
+    });
+</script>
