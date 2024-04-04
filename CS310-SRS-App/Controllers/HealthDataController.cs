@@ -52,14 +52,20 @@ namespace CS310_SRS_App.Controllers
 
             //---------------------------------------------------------------
             //This section is for live pdf
-            var fileName = "HealthDataReport.pdf";
+
+
             var streamManager = HttpContext.RequestServices.GetRequiredService<RecyclableMemoryStreamManager>();
             using var memoryStream = streamManager.GetStream();
+
+            // Ensure your PDF generation logic writes directly into `memoryStream`.
             var report = new InvoiceDocument(patientDocToPass);
-            report.GeneratePdf(fileName);
-            HttpContext.Response.ContentType = "application/pdf";
-            HttpContext.Response.Headers.ContentDisposition = $"attachment; filename=\"{fileName}\"";
+            report.GeneratePdf(memoryStream); // This should be modified to accept a stream if it doesn't already.
+
             memoryStream.Position = 0;
+
+            HttpContext.Response.ContentType = "application/pdf";
+            HttpContext.Response.Headers.ContentDisposition = $"attachment; filename=\"HealthDataReport.pdf\"";
+
             await memoryStream.CopyToAsync(HttpContext.Response.Body);
             //---------------------------------------------------------------
 
