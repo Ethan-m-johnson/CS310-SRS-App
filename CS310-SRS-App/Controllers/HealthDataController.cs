@@ -8,6 +8,7 @@ using QuestPDF.Infrastructure;
 using QuestPDF.Fluent;
 using System.Diagnostics;
 using QuestPDF.Helpers;
+using Microsoft.IO;
 
 namespace CS310_SRS_App.Controllers
 {
@@ -41,25 +42,25 @@ namespace CS310_SRS_App.Controllers
 
             //---------------------------------------------------------------
             //This section is for local pdf
-            var fileName = "HealthDataReport.pdf";
-            var report = new InvoiceDocument(patientDocToPass);
-            report.GeneratePdf(fileName);
-            var startInfo = new ProcessStartInfo("explorer.exe", fileName);
-            Process.Start(startInfo);
+            //var fileName = "HealthDataReport.pdf";
+            //var report = new InvoiceDocument(patientDocToPass);
+            //report.GeneratePdf(fileName);
+            //var startInfo = new ProcessStartInfo("explorer.exe", fileName);
+            //Process.Start(startInfo);
             //----------------------------------------------------------------
 
 
             //---------------------------------------------------------------
             //This section is for live pdf
-            //var fileName = "HealthDataReport.pdf";
-            //var streamManager = HttpContext.RequestServices.GetRequiredService<RecyclableMemoryStreamManager>();
-            //using var memoryStream = streamManager.GetStream();
-            //var report = new InvoiceDocument(patientDocToPass);
-            //report.GeneratePdf(fileName);
-            //HttpContext.Response.ContentType = "application/pdf";
-            //HttpContext.Response.Headers.ContentDisposition = $"attachment; filename=\"{fileName}\"";
-            //memoryStream.Position = 0;
-            //await memoryStream.CopyToAsync(HttpContext.Response.Body);
+            var fileName = "HealthDataReport.pdf";
+            var streamManager = HttpContext.RequestServices.GetRequiredService<RecyclableMemoryStreamManager>();
+            using var memoryStream = streamManager.GetStream();
+            var report = new InvoiceDocument(patientDocToPass);
+            report.GeneratePdf(fileName);
+            HttpContext.Response.ContentType = "application/pdf";
+            HttpContext.Response.Headers.ContentDisposition = $"attachment; filename=\"{fileName}\"";
+            memoryStream.Position = 0;
+            await memoryStream.CopyToAsync(HttpContext.Response.Body);
             //---------------------------------------------------------------
 
 
