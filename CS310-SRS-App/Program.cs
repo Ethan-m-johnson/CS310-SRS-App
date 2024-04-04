@@ -1,8 +1,12 @@
 using CS310_SRS_App.Model;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Infrastructure;
+using Microsoft.IO; // Make sure you have this using statement
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<RecyclableMemoryStreamManager>();
 
 
 builder.Services.AddDbContext<CS310SRSDatabaseContext>(options =>

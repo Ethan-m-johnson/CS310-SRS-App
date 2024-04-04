@@ -1815,3 +1815,4 @@ C:\Users\E122059\Documents\CS310-SRS-App\CS310-SRS-App\CS310-SRS-App\obj\Debug\n
 C:\Users\E122059\Documents\CS310-SRS-App\CS310-SRS-App\CS310-SRS-App\obj\Debug\net6.0\CS310-SRS-App.pdb
 C:\Users\E122059\Documents\CS310-SRS-App\CS310-SRS-App\CS310-SRS-App\obj\Debug\net6.0\CS310-SRS-App.genruntimeconfig.cache
 C:\Users\E122059\Documents\CS310-SRS-App\CS310-SRS-App\CS310-SRS-App\obj\Debug\net6.0\ref\CS310-SRS-App.dll
+C:\Users\johns\Documents\GitHub\CS310-SRS-App\CS310-SRS-App\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll

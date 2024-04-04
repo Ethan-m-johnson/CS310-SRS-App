@@ -55,7 +55,7 @@ namespace CS310_SRS_App.Controllers
 
 
             var streamManager = HttpContext.RequestServices.GetRequiredService<RecyclableMemoryStreamManager>();
-            using var memoryStream = streamManager.GetStream();
+            MemoryStream memoryStream = new MemoryStream();
 
             // Ensure your PDF generation logic writes directly into `memoryStream`.
             var report = new InvoiceDocument(patientDocToPass);
@@ -63,6 +63,7 @@ namespace CS310_SRS_App.Controllers
 
             memoryStream.Position = 0;
 
+            HttpContext.Response.Clear();
             HttpContext.Response.ContentType = "application/pdf";
             HttpContext.Response.Headers.ContentDisposition = $"attachment; filename=\"HealthDataReport.pdf\"";
 
