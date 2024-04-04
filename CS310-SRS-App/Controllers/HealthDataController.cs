@@ -68,10 +68,7 @@ namespace CS310_SRS_App.Controllers
 
             await memoryStream.CopyToAsync(HttpContext.Response.Body);
             //---------------------------------------------------------------
-
-
-
-            return RedirectToAction(nameof(PatientHealthData));
+            return new EmptyResult();
         }
         public class InvoiceDocument : IDocument
         {
