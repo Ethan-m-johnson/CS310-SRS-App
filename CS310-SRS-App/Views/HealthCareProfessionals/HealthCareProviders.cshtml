@@ -5,30 +5,34 @@
     ViewData["Title"] = "Staff Search";
 }
 
-<h3>Search For Staff: </h3>
+<h3>Search For Doctors By Speciality: </h3>
 <div class="search-container position-relative">
-    <input type="text" id="patientSearch" class="form-control" placeholder="Search staff..." autocomplete="off">
+    <input type="text" id="patientSearch" class="form-control" placeholder="Search By Speciality..." autocomplete="off">
     <ul id="searchResults" class="list-group position-absolute w-100" style="display:none;"></ul>
 </div>
 <br />
 
 <!-- This section will display the staff member information -->
 <div id="staffDetails" style="display:none;">
-    <h3>Staff info:</h3>
     <!-- Staff details will be appended here -->
 </div>
 
-<h1>Staff List</h1>
+
 
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+
 <script>
     $(document).ready(function () {
+        // Handles typing in the search box to filter specialties
         $('#patientSearch').keyup(function () {
             var searchTerm = $(this).val();
-            if (searchTerm.length > 0) { // Trigger search for 3 or more characters
+            if (searchTerm.length > 0) {
                 $.ajax({
                     url: '@Url.Action("ListSpecialties", "HealthCareProfessionals")',
                     type: 'GET',
@@ -38,15 +42,15 @@
                         $searchResults.empty(); // Clear previous results
 
                         if (data && data.length > 0) {
-                            $.each(data, function (i, fullName) { // Assuming `data` is an array of strings (patient full names)
+                            $.each(data, function (i, specialty) {
                                 var listItem = $('<li>')
                                     .addClass('list-group-item list-group-item-action')
-                                    .text(fullName) // Directly use the fullName string
+                                    .text(specialty)
                                     .click(function () {
-                                        $('#patientSearch').val(fullName); // Update textbox with selected patient name
-                                        $('#selectedPatientName').val(fullName); // Update hidden field with selected patient name
+                                        // When a specialty is clicked, update the search box and hide the dropdown
+                                        $('#patientSearch').val(specialty);
                                         $searchResults.hide();
-                                        return false; // Prevent the default action
+                                        loadStaffDetails(specialty); // Load staff details for the selected specialty
                                     });
                                 $searchResults.append(listItem);
                             });
@@ -65,7 +69,33 @@
             }
         });
 
-        // Hide the searchResults list when clicking outside
+        // Load staff details for the selected specialty
+        function loadStaffDetails(specialty) {
+            console.log('Loading details for:', specialty); // Log the specialty being loaded
+            $.ajax({
+                url: '/HealthCareProfessionals/GetStaffBySpecialty', // Adjust the URL as needed
+                type: 'GET',
+                data: { specialty: specialty },
+                success: function (data) {
+                    console.log('Data received:', data); // Log the data received from the server
+                    var $staffDetails = $('#staffDetails');
+                    $staffDetails.empty().append('<h3>Doctor Information:</h3>');
+
+                    $.each(data, function (index, staff) {
+                        console.log('Staff member:', staff); // Log each staff member object
+                        $staffDetails.append('<p>' + 'Dr.' + staff.fullName + ' - ' + staff.specialty + ', Contact: ' + staff.email + '</p>');
+                    });
+
+                    $staffDetails.show(); // Display the staff details section
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error: " + status + " " + error);
+                    $('#staffDetails').html('<p>Error loading staff details.</p>').show();
+                }
+            });
+        }
+
+        // Hide the searchResults list when clicking outside of the search box or dropdown
         $(document).click(function (event) {
             if (!$(event.target).closest('#patientSearch, #searchResults').length) {
                 $('#searchResults').hide();
@@ -73,110 +103,6 @@
         });
     });
 </script>
-<script>
-    $(document).ready(function () {
-        // Listen for changes on the #patientSearch input
-        $('#patientSearch').change(function () {
-            // Check if the input has a value
-            if ($(this).val() !== '') {
-                // If there is a value, show the patient details form
-                $('#patientDetails').slideDown(); // Use slideDown for a smooth transition
-            } else {
-                // If the input is empty, hide the patient details form
-                $('#patientDetails').slideUp(); // Use slideUp to hide with a smooth transition
-            }
-        });
-
-        // Update hidden field with patient name when search input changes
-        $('#patientSearch').on('input', function () {
-            var patientName = $(this).val();
-            $('#selectedPatientName').val(patientName);
-        });
-
-        // Handle click on search results
-        $('#searchResults').on('click', 'li', function () {
-            var selectedPatientName = $(this).text();
-            $('#patientSearch').val(selectedPatientName); // Update search box with selected patient name
-            $('#selectedPatientName').val(selectedPatientName); // Update hidden field with selected patient name
-            $('#searchResults').hide(); // Hide search results
-            $('#patientDetails').slideDown(); // Show patient details form
-        });
-    });
-</script>
-
-<!--
-<script>
-    $(document).ready(function () {
-        // This function will be triggered when a specialty is selected from the results
-        function loadStaffDetails(specialty) {
-            $.ajax({
-                url: '@Url.Action("GetStaffBySpecialty", "HealthcareProfessionals")', // Adjust with your controller and action
-                type: 'GET',
-                data: { specialty: specialty },
-                success: function (data) {
-                    var $staffDetails = $('#staffDetails');
-                    $staffDetails.empty().append('<h3>Staff Info:</h3>'); // Clear previous details and add header
-
-                    // Loop through each staff member and append their details
-                    $.each(data, function (index, staff) {
-                        $staffDetails.append('<p>' + staff.FullName + ' - ' + staff.Specialty + '</p>');
-                    });
-
-                    $staffDetails.show(); // Display the staff details section
-                },
-                error: function () {
-                    $('#staffDetails').html('<p>Error loading staff details.</p>').show();
-                }
-            });
-        }
-
-        // Bind click event to dynamically generated list items (using event delegation)
-        $('#specialtyResults').on('click', 'li', function () {
-            var selectedSpecialty = $(this).text();
-            $('#patientSearch').val(selectedSpecialty); // Update the search input with the selected specialty
-            $('#searchResults').hide(); // Hide the list of specialties
-
-            loadStaffDetails(selectedSpecialty); // Load and display staff details for the selected specialty
-        });
-    });
-</script> 
--->
-<script>
-    $(document).ready(function () {
-        // This function will be triggered when a specialty is selected from the results
-        function loadStaffDetails(specialty) {
-            $.ajax({
-                url: '@Url.Action("GetStaffBySpecialty", "HealthcareProfessionals")', // Adjust with your controller and action
-                type: 'GET',
-                data: { specialty: specialty },
-                success: function (data) {
-                    var $staffDetails = $('#staffDetails');
-                    $staffDetails.empty().append('<h3>Staff Info:</h3>'); // Clear previous details and add header
-
-                    // Loop through each staff member and append their details
-                    $.each(data, function (index, staff) {
-                        $staffDetails.append('<p>' + staff.FullName + ' - ' + staff.Specialty + '</p>');
-                    });
-
-                    $staffDetails.show(); // Display the staff details section
-                },
-                error: function () {
-                    $('#staffDetails').html('<p>Error loading staff details.</p>').show();
-                }
-            });
-        }
-
-        // Bind click event to dynamically generated list items (using event delegation)
-        $('#specialtyResults').on('click', 'li', function () {
-            var selectedSpecialty = $(this).text();
-            $('#patientSearch').val(selectedSpecialty); // Update the search input with the selected specialty
-            $('#searchResults').hide(); // Hide the list of specialties
-
-            loadStaffDetails(selectedSpecialty); // Load and display staff details for the selected specialty
-        });
-    });
-</script>
-
 
 <style>
     .search-container {
