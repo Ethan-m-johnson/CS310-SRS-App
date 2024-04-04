@@ -1,5 +1,6 @@
 ﻿using CS310_SRS_App.Model;
 using CS310_SRS_App.Model.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -311,8 +312,8 @@ namespace CS310_SRS_App.Controllers
             await _context.SaveChangesAsync();
 
             SendInvitationEmail(adminEmail, tempPassword); //Implement later
-            
-            return RedirectToAction("Index"); //User will be able to see the new account entry 
+
+            return RedirectToAction("InviteUsers");
         }
 
 
@@ -360,7 +361,7 @@ namespace CS310_SRS_App.Controllers
 
             SendInvitationEmail(staffEmail, tempPassword); //Implement later
 
-            return RedirectToAction("Index"); //User will be able to see the new account entry 
+            return RedirectToAction("InviteUsers");
         }
 
         [HttpPost]
@@ -405,7 +406,7 @@ namespace CS310_SRS_App.Controllers
 
             SendInvitationEmail(patientEmail, tempPassword); //Call invitation email
 
-            return RedirectToAction("Index"); //User will be able to see the new account entry 
+            return RedirectToAction("InviteUsers");
         }
 
         public string GeneratePassword(int length = 12)
@@ -584,9 +585,17 @@ namespace CS310_SRS_App.Controllers
             {
                 return NotFound();
             }
+            if (int.TryParse(HttpContext.Session.GetString("SessionKeyID"), out int sessionId))
+            {
+                if (id != sessionId)
+                {
+                    return NotFound();
+                }
+            }
 
             var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.UserId == id);
+
             if (user == null)
             {
                 return NotFound();
@@ -624,7 +633,13 @@ namespace CS310_SRS_App.Controllers
             {
                 return NotFound();
             }
-
+            if (int.TryParse(HttpContext.Session.GetString("SessionKeyID"), out int sessionId))
+            {
+                if (id != sessionId)
+                {
+                    return NotFound();
+                }
+            }
             var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
@@ -689,6 +704,8 @@ namespace CS310_SRS_App.Controllers
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            return NotFound(); // No one can delete 
+
             if (id == null || _context.Users == null)
             {
                 return NotFound();
@@ -709,6 +726,8 @@ namespace CS310_SRS_App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            return NotFound(); // No one can delete 
+
             if (_context.Users == null)
             {
                 return Problem("Entity set 'CS310SRSDatabaseContext.Users'  is null.");
