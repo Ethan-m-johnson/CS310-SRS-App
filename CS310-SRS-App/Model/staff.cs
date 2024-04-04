@@ -10,5 +10,6 @@ namespace CS310_SRS_App.Model
         public decimal? Salary { get; set; }
         public virtual User User { get; set; } = null!;
         public virtual Patient? Patient { get; set; }
+        public string? Speciality { get; set; }
     }
 }
