@@ -422,11 +422,17 @@ namespace CS310_SRS_App.Model
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.Specialty)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.staff)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Staff_User");
+
+                
             });
 
             OnModelCreatingPartial(modelBuilder);
