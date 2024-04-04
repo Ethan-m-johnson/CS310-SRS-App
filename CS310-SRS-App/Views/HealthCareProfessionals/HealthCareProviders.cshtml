@@ -12,12 +12,14 @@
 </div>
 <br />
 
-<form id="patientDetails" asp-action="SavePatientChart" method="post" style="display:none;">
+<!-- This section will display the staff member information -->
+<div id="staffDetails" style="display:none;">
     <h3>Staff info:</h3>
-    <br>
-    <p> name: teststaff1 teststaff1      <br />     email: teststaff1@gmail.com</p>
+    <!-- Staff details will be appended here -->
+</div>
 
-</form>
+<h1>Staff List</h1>
+
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -28,7 +30,7 @@
             var searchTerm = $(this).val();
             if (searchTerm.length > 0) { // Trigger search for 3 or more characters
                 $.ajax({
-                    url: '@Url.Action("SearchPatients", "HealthCareProfessionals")',
+                    url: '@Url.Action("ListSpecialties", "HealthCareProfessionals")',
                     type: 'GET',
                     data: { term: searchTerm },
                     success: function (data) {
@@ -102,8 +104,78 @@
     });
 </script>
 
+<!--
+<script>
+    $(document).ready(function () {
+        // This function will be triggered when a specialty is selected from the results
+        function loadStaffDetails(specialty) {
+            $.ajax({
+                url: '@Url.Action("GetStaffBySpecialty", "HealthcareProfessionals")', // Adjust with your controller and action
+                type: 'GET',
+                data: { specialty: specialty },
+                success: function (data) {
+                    var $staffDetails = $('#staffDetails');
+                    $staffDetails.empty().append('<h3>Staff Info:</h3>'); // Clear previous details and add header
 
+                    // Loop through each staff member and append their details
+                    $.each(data, function (index, staff) {
+                        $staffDetails.append('<p>' + staff.FullName + ' - ' + staff.Specialty + '</p>');
+                    });
 
+                    $staffDetails.show(); // Display the staff details section
+                },
+                error: function () {
+                    $('#staffDetails').html('<p>Error loading staff details.</p>').show();
+                }
+            });
+        }
+
+        // Bind click event to dynamically generated list items (using event delegation)
+        $('#specialtyResults').on('click', 'li', function () {
+            var selectedSpecialty = $(this).text();
+            $('#patientSearch').val(selectedSpecialty); // Update the search input with the selected specialty
+            $('#searchResults').hide(); // Hide the list of specialties
+
+            loadStaffDetails(selectedSpecialty); // Load and display staff details for the selected specialty
+        });
+    });
+</script> 
+-->
+<script>
+    $(document).ready(function () {
+        // This function will be triggered when a specialty is selected from the results
+        function loadStaffDetails(specialty) {
+            $.ajax({
+                url: '@Url.Action("GetStaffBySpecialty", "HealthcareProfessionals")', // Adjust with your controller and action
+                type: 'GET',
+                data: { specialty: specialty },
+                success: function (data) {
+                    var $staffDetails = $('#staffDetails');
+                    $staffDetails.empty().append('<h3>Staff Info:</h3>'); // Clear previous details and add header
+
+                    // Loop through each staff member and append their details
+                    $.each(data, function (index, staff) {
+                        $staffDetails.append('<p>' + staff.FullName + ' - ' + staff.Specialty + '</p>');
+                    });
+
+                    $staffDetails.show(); // Display the staff details section
+                },
+                error: function () {
+                    $('#staffDetails').html('<p>Error loading staff details.</p>').show();
+                }
+            });
+        }
+
+        // Bind click event to dynamically generated list items (using event delegation)
+        $('#specialtyResults').on('click', 'li', function () {
+            var selectedSpecialty = $(this).text();
+            $('#patientSearch').val(selectedSpecialty); // Update the search input with the selected specialty
+            $('#searchResults').hide(); // Hide the list of specialties
+
+            loadStaffDetails(selectedSpecialty); // Load and display staff details for the selected specialty
+        });
+    });
+</script>
 
 
 <style>
