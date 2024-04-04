@@ -113,7 +113,7 @@ namespace CS310_SRS_App.Model
                 entity.ToTable("Contact");
 
                 entity.Property(e => e.ContactId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("ContactID");
 
                 entity.Property(e => e.User1Id).HasColumnName("User1ID");
