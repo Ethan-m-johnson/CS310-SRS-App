@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Reflection.Metadata;
 using CS310_SRS_App.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 //using Microsoft.EntityFrameworkCore;
 
-namespace CS310_SRS_App.Views.Message
+namespace CS310_SRS_App.Controllers
 {
     public class MessageController : Controller
     {
@@ -26,39 +27,7 @@ namespace CS310_SRS_App.Views.Message
 
         }
 
-        [HttpPost]
-        public IActionResult sendMessage(int senderId, int recieverId, string content)
-        {
-            /*//check if patient or a doctor
-            var senderIsPatient = _context.Patients.Any(p => p.UserId == senderId);
 
-            //check if reciever is doctor or patient
-            var recieverIsDoctor = _context.Doctors.Any(p => p.StaffId == recieverId);
-
-            //make sure sender and reciver exist
-            if (!senderIsPatient && !recieverIsDoctor)
-            {
-                return BadRequest("Sender and reciver are not valid users");
-            }*/
-
-            //create new message
-            var message = new Model.Message
-            {
-                UserId = senderId,
-                ContactId = recieverId,
-                Message1 = content,
-                DateSent = DateTime.Now,
-
-            };
-
-            _context.Messages.Add(message);
-            //_context.SaveChanges();
-
-            return RedirectToAction("MessagePage");
-
-        }
-
-        [HttpGet]
         public async Task<IActionResult> SearchPatients(string term)
         {
             Console.WriteLine("Search Term: " + term); // Log the received term
@@ -93,114 +62,70 @@ namespace CS310_SRS_App.Views.Message
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendPatientToDocEmail(String? emailBody, string selectedDoctorName)
+        public async Task<IActionResult> sendMessageEmail(string? body, string docName, string senderName)
         {
             try
             {
-                var doctorNameParts = selectedDoctorName.Split(' ');
+                var doctorNameParts = docName.Split(' ');
                 var firstName = doctorNameParts[0];
                 var lastName = doctorNameParts[1];
+                Console.WriteLine("---last-----" + lastName);
+                Console.WriteLine("---first-----" + firstName);
+                
 
                 //get doctors ID based on name
-                /*var staffId = await _context.staff
-            .Where(s => s.FirstName == firstName && s.LastName == lastName)
-            .Select(s => s.StaffId)
-            .FirstOrDefaultAsync();*/
-
-                var emailAddress = await _context.Users
-                    .Where(u => u.FirstName == firstName && u.LastName == lastName)
-                    .Select(u => u.Email)
-                    .FirstOrDefaultAsync();
-
-                if (!string.IsNullOrEmpty(emailAddress))
-                {
-                    var message = new MailMessage();
-                    message.From = new MailAddress("cs310automatedemailnoreply@gmail.com");
-                    message.To.Add(emailAddress);
-                    message.Subject = "Message From Patient";
-                    message.Body = $"Hello,<br><br>" + emailBody;
-                    message.IsBodyHtml = true;
-
-                    using (var client = new SmtpClient("smtp.gmail.com", 587))
-                    {
-                        client.EnableSsl = true; // Gmail requires SSL
-                        client.UseDefaultCredentials = false;
-                        client.Credentials = new NetworkCredential("cs310automatedemailnoreply@gmail.com", "rzzk ubqp pgda opju");
-                        await client.SendMailAsync(message);
-                    }
-
-                    return Ok("Email sent successfully.");
-                }
-                else
-                {
-                    // Log or handle the case where there's no email
-                    Console.WriteLine("No email provided for sending the message.");
-                    return BadRequest("No email provided for sending the message.");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log or handle the error more gracefully
-                Console.WriteLine($"Failed to send message: {ex.Message}");
-                return StatusCode(500, "An error occurred while sending the message.");
-            }
-        }
-
-
-        /*
-        [HttpPost]
-        public async Task<IActionResult> SendPatientToDocEmail(String? emailBody, string selectedDoctorName)
-        {
-
-            var doctorNameParts = selectedDoctorName.Split(' ');
-            var firstName = doctorNameParts[0];
-            var lastName = doctorNameParts[1];
-
-
-
-            // Get the user ID based on the first name and last name
-            var UserObject =  _context.Users
-                .Where(u => u.FirstName == firstName && u.LastName == lastName)
-                .Select(u => u.UserId)
-                .FirstOrDefault();
-
-
-
-            var emailAddress = await _context.Users
-                .Where(u => u.FirstName == firstName && u.LastName == lastName)
-                .Select(u => u.Email)
+                var userObject = await _context.Users
+                .Where(s => s.FirstName == firstName && s.LastName == lastName)
                 .FirstOrDefaultAsync();
+                var doctorId = userObject?.UserId;
+                Console.WriteLine("---docId-----" + doctorId);
+                var emailAddress = userObject?.Email;
+                Console.WriteLine("---doc email-----" + emailAddress);
 
+                //get senderID and email
+                var sender = senderName.Split(' ');
+                var senderfname = sender[0];
+                var senderlname = sender[1];
+                Console.WriteLine("---last-----" + senderlname);
+                Console.WriteLine("---first-----" + senderfname);
 
-            try
-            {
+                var senderObject = await _context.Users
+                .Where(s => s.FirstName == senderfname && s.LastName == senderlname)
+                .FirstOrDefaultAsync();
+                var senderId = senderObject?.UserId;
+                Console.WriteLine("---senderId-----" + senderId);
+                var senderEmail = senderObject?.Email;
+                Console.WriteLine("---sender email-----" + senderEmail);
+
+                //construct email message
                 var message = new MailMessage();
+                message.To.Add(emailAddress);
                 message.From = new MailAddress("cs310automatedemailnoreply@gmail.com");
-
-
-
-                if (!string.IsNullOrEmpty(emailAddress))
-                {
-                    message.To.Add(emailAddress);
-                }
-                else
-                {
-                    // Log or handle the case where there's no email
-                    Console.WriteLine("No email provided for sending the message.");
-                    return BadRequest("No email provided for sending the message.");
-                }
-
-
-
-                message.Subject = "Message From Patient";
-                message.Body = $"Hello,<br><br>" +
-                               emailBody;
-
-
-
+                message.Subject = "SRS Message";
+                message.Body = $"Hello,Dr. {docName} <br><br>" + body + $"<br><br> Thank you,<br><br>" + $"{senderfname} " + $"{senderlname} <br><br><br><br>"
+                    + $"Please DO NOT reply to this email. Please contact {senderEmail} directly." ;
                 message.IsBodyHtml = true;
 
+                Console.WriteLine("------------------------------HERE------------------------------");
 
+                Contact createContact = new Contact
+                {
+                    User1Id = (int)senderId,
+                    User2Id = (int)doctorId
+                };
+
+                _context.Contacts.Add(createContact);
+                await _context.SaveChangesAsync();
+
+                Message createMessage = new Message
+                {
+
+                    UserId = (int)senderId,
+                    DateSent = DateTime.Now,
+                    Message1 = body
+                };
+                _context.Messages.Add(createMessage);
+                await _context.SaveChangesAsync();
 
                 using (var client = new SmtpClient("smtp.gmail.com", 587))
                 {
@@ -208,18 +133,18 @@ namespace CS310_SRS_App.Views.Message
                     client.UseDefaultCredentials = false;
                     client.Credentials = new NetworkCredential("cs310automatedemailnoreply@gmail.com", "rzzk ubqp pgda opju");
                     await client.SendMailAsync(message);
-                    //client.Send(message);
                 }
 
-                return Ok("Enail sent successfully.");
+                return View("SuccessMessagePage");
             }
             catch (Exception ex)
             {
                 // Log or handle the error more gracefully
-                Console.WriteLine($"Failed to send message: {ex.Message}");
-            }
+                return View("ErrorMessagePage");
 
-        }*/
+            }
+        }
+
 
     }
 }

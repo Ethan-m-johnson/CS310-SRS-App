@@ -317,7 +317,7 @@ namespace CS310_SRS_App.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateStaff(string? staffEmail, decimal staffSalary)
+        public async Task<IActionResult> CreateStaff(string? staffEmail, decimal staffSalary, string? isDoctor, string? doctorSpecialty)
         {
             if (string.IsNullOrWhiteSpace(staffEmail) || staffSalary <= 0)
             {
@@ -340,6 +340,7 @@ namespace CS310_SRS_App.Controllers
                 Email = staffEmail,
                 Password = hashedPassword, 
                 IsVerified = false,
+
                 //accountActivated = false // Add this to the DB
             };
 
@@ -349,7 +350,9 @@ namespace CS310_SRS_App.Controllers
 
             staff newStaff = new staff
             {
-                UserId = newUser.UserId // Connect the new user to the staff role
+                UserId = newUser.UserId,
+                Salary = staffSalary,
+                Specialty = isDoctor == "Yes" ? doctorSpecialty : null,
             };
 
             _context.Add(newStaff); //Add user role
@@ -565,7 +568,7 @@ namespace CS310_SRS_App.Controllers
 
 
 
-
+        /**
         // GET: Users
         public async Task<IActionResult> Index()
         {
@@ -573,7 +576,7 @@ namespace CS310_SRS_App.Controllers
                         View(await _context.Users.ToListAsync()) :
                         Problem("Entity set 'CS310SRSDatabaseContext.Users'  is null.");
         }
-
+        */
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -678,7 +681,7 @@ namespace CS310_SRS_App.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return View(user);
             }
             return View(user);
         }

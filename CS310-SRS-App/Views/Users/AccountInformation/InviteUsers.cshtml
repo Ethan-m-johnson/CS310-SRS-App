@@ -48,6 +48,32 @@
                 <label for="staffSalary" class="control-label">Salary:</label>
                 <input type="number" id="staffSalary" name="staffSalary" class="form-control" required />
             </div>
+            <div class="form-group">
+                <label>Is this staff member a doctor?</label>
+                <div>
+                    <input type="radio" id="doctorYes" name="isDoctor" value="Yes" required />
+                    <label for="doctorYes">Yes</label>
+                </div>
+                <div>
+                    <input type="radio" id="doctorNo" name="isDoctor" value="No" required />
+                    <label for="doctorNo">No</label>
+                </div>
+            </div>
+            <div id="doctorSpecialtyForm" style="display:none;">
+                <div class="form-group">
+                    <label for="doctorSpecialty" class="control-label">Doctor Specialty:</label>
+                    <select id="doctorSpecialty" name="doctorSpecialty" class="form-control" required>
+                        <option value="">Select Specialty</option>
+                        <option value="General">General</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Psychiatry">Psychiatry</option>
+                        <!-- Add more specialties as needed -->
+                    </select>
+                </div>
+            </div>
             <br />
             <input type="submit" value="Invite Staff" class="btn btn-primary" />
         </form>
@@ -108,6 +134,18 @@ else
                         $('#patientForm').show();
                     } else {
                         $('#patientForm').hide();
+                    }
+                });
+
+
+
+                // Doctor question for Staff
+                $('input[name="isDoctor"]').change(function () {
+                    var selected = $('input[name="isDoctor"]:checked').val();
+                    if (selected == 'Yes') {
+                        $('#doctorSpecialtyForm').show();
+                    } else {
+                        $('#doctorSpecialtyForm').hide();
                     }
                 });
             });

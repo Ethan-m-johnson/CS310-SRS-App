@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CS310_SRS_App.Model
 {
     public partial class Prescription
     {
+       
         public int? PrescriptionId { get; set; }
         public int? PatientId { get; set; }
         public int? PrescriberStaffId { get; set; }
@@ -18,7 +20,7 @@ namespace CS310_SRS_App.Model
         public int? Refills { get; set; }
         public DateTime? DatePrescribed { get; set; }
         public DateTime? Expiration { get; set; }
-
+        public bool RefillRequested { get; set; }
         public virtual Patient? Patient { get; set; }
         public virtual staff? PrescriberStaff { get; set; }
     }

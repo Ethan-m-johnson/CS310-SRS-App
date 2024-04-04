@@ -113,7 +113,7 @@ namespace CS310_SRS_App.Model
                 entity.ToTable("Contact");
 
                 entity.Property(e => e.ContactId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("ContactID");
 
                 entity.Property(e => e.User1Id).HasColumnName("User1ID");
@@ -321,10 +321,15 @@ namespace CS310_SRS_App.Model
 
             modelBuilder.Entity<Prescription>(entity =>
             {
-                entity.HasNoKey();
+          
+                entity.HasKey(e => e.PrescriptionId);
 
                 entity.ToTable("Prescription");
 
+                entity.Property(e => e.PrescriptionId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("PrescriptionId");
+                
                 entity.Property(e => e.DateDistributed).HasColumnType("datetime");
 
                 entity.Property(e => e.DatePrescribed).HasColumnType("datetime");
@@ -353,7 +358,9 @@ namespace CS310_SRS_App.Model
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Quantity).HasColumnType("decimal(30, 15)");
+                entity.Property(e => e.RefillRequested).HasColumnType("bit");
+
+                entity.Property(e => e.Quantity).HasColumnType("int");
 
                 entity.HasOne(d => d.Patient)
                     .WithMany()
@@ -415,11 +422,17 @@ namespace CS310_SRS_App.Model
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.Specialty)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.staff)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Staff_User");
+
+                
             });
 
             OnModelCreatingPartial(modelBuilder);

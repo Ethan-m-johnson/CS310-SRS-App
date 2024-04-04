@@ -1,0 +1,73 @@
+﻿@model IEnumerable<CS310_SRS_App.Model.Prescription>
+
+<h2>Requested Prescriptions</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Prescription Name</th>
+                <th>Pharmacy</th>
+                @*<th>Quantity</th>*@
+                <th>Dose</th>
+                <th>Dosage Form</th>
+                <th>Directions For Use</th>
+                <th>Refills</th>
+                <th>Date Prescribed</th>
+                <th>Expiration</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var prescription in Model)
+            {
+                <tr>
+                    <td>@prescription.PrescriptionName</td>
+                    <td>@prescription.Pharmacy</td>
+                    @*<td>@prescription.Quantity</td>*@
+                    <td>@prescription.Dose</td>
+                    <td>@prescription.DosageForm</td>
+                    <td>@prescription.DirectionsForUse</td>
+                    <td>@prescription.Refills</td>
+                    <td>@prescription.DatePrescribed?.ToString("MM/dd/yyyy")</td>
+                    <td>@prescription.Expiration?.ToString("MM/dd/yyyy")</td>
+                    <td>
+                        @if (prescription.Refills.HasValue && prescription.Refills > 0)
+                        {
+                            <a onclick="requestRefill(@prescription.PrescriptionId)" class="btn btn-primary">Refill Requested</a>
+                        }
+                        else
+                        {
+                            <a disabled class="btn btn-secondary"></a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No requested prescriptions available.</p>
+}
+
+<script>
+    function requestRefill(PrescriptionId) {
+        // Perform an AJAX request to the server to handle the refill request
+        $.ajax({
+            url: '/Prescription/RequestRefill', // URL to your controller action
+            type: 'POST', // HTTP method
+            data: { id: prescriptionId }, // Data to send to the server
+            success: function (response) {
+                // Handle the success response from the server
+                console.log('Refill requested successfully for prescription ID: ' + PrescriptionId);
+                // Optionally, you can perform any additional actions here, such as updating the UI
+            },
+            error: function (xhr, status, error) {
+                // Handle errors if the request fails
+                console.error('Error requesting refill for prescription ID: ' + PrescriptionId);
+                // Optionally, you can display an error message to the user or handle the error in another way
+            }
+        });
+    }
+</script>
