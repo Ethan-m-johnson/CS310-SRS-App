@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CS310_SRS_App.Model
 {
     public partial class Prescription
     {
+       
         public int? PrescriptionId { get; set; }
         public int? PatientId { get; set; }
         public int? PrescriberStaffId { get; set; }
