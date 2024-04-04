@@ -485,7 +485,7 @@ namespace CS310_SRS_App.Controllers
                 message.Body = $"Hello,<br><br>" +
                     "Welcome to SRS, please find the attached temporary password and navigate to the account activation page linked below.<br><br>" +
                     $"Temporary Password: {tempPassword}<br><br>" +
-                    $"Account Activation Link: <a href='https://localhost:7067/users/accountinformation/FirstTimeUser'>Activate Account</a><br>";
+                    $"Account Activation Link: <a href='https://cs310.azurewebsites.net/users/accountinformation/FirstTimeUser'>Activate Account</a><br>";
 
                 message.IsBodyHtml = true;
 
