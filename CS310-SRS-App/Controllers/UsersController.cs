@@ -352,7 +352,7 @@ namespace CS310_SRS_App.Controllers
             {
                 UserId = newUser.UserId,
                 Salary = staffSalary,
-                /*Speciality = isDoctor == "Yes" ? doctorSpecialty : null*/
+                Specialty = isDoctor == "Yes" ? doctorSpecialty : null,
             };
 
             _context.Add(newStaff); //Add user role
